@@ -11,6 +11,7 @@ def parse_arguments():
     parser = argparse.ArgumentParser(description='Debian Packages Analyzer')
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument('--import-repo', help='Import from Debian repository URL (e.g., https://ftp.debian.org/debian/)')
+    group.add_argument('--import-local', help='Import from local directory containing Packages.gz files')
     group.add_argument('--export-file', action='store_true', help='Export concatenated Packages file')
     parser.add_argument('--output-dir', default='debian_packages', help='Output directory for imported files')
     parser.add_argument('--input-dir', help='Input directory for export operation')
@@ -92,6 +93,26 @@ def import_repository(args):
                 
                 os.unlink(packages_gz_path)
 
+def import_local(args):
+    local_dir = args.import_local
+    if not os.path.isdir(local_dir):
+        print(f"Error: Directory not found: {local_dir}")
+        return
+    
+    for root, _, files in os.walk(local_dir):
+        for file in files:
+            if file == 'Packages.gz':
+                packages_gz_path = os.path.join(root, file)
+                print(f"Processing local file: {packages_gz_path}")
+                
+                packages = parse_packages_gz(packages_gz_path)
+                
+                # Determine output path based on relative path from input dir
+                rel_path = os.path.relpath(root, local_dir)
+                output_dir = os.path.join(args.output_dir, rel_path)
+                
+                create_file_structure(packages, output_dir)
+
 def export_packages_file(args):
     if not args.input_dir:
         print("Error: --input-dir is required for export operation")
@@ -112,6 +133,8 @@ def main():
     
     if args.import_repo:
         import_repository(args)
+    elif args.import_local:
+        import_local(args)
     elif args.export_file:
         export_packages_file(args)
 
