@@ -60,6 +60,8 @@ def create_file_structure(packages, output_dir):
             continue
             
         filename = pkg['Filename']
+        parts = Path(filename).parts
+        filename = Path(*parts[3:])
         file_path = os.path.join(output_dir, filename)
         dir_path = os.path.dirname(file_path)
         

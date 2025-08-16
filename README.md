@@ -8,3 +8,14 @@
 ## export 
 
 `debrepoctl --export-file path/to/gitrepo:branch Packages`
+
+## main branch
+
+main branch sync 1h
+
+main branch - real repo
+branching
+commit
+commit
+push
+git diff main...HEAD
