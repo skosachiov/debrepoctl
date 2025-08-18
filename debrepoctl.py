@@ -15,9 +15,9 @@ def parse_arguments():
     group.add_argument('--export-file', action='store_true', help='Export concatenated Packages file')
     parser.add_argument('--output-dir', default='debian_packages', help='Output directory for imported files')
     parser.add_argument('--input-dir', help='Input directory for export operation')
-    parser.add_argument('--components', default='main,contrib,non-free', help='Repository components to analyze')
-    parser.add_argument('--architectures', default='amd64,i386,all', help='Architectures to analyze')
-    parser.add_argument('--distributions', default='stable,testing,unstable', help='Distributions to analyze')
+    parser.add_argument('--components', default='main,contrib', help='Repository components to analyze')
+    parser.add_argument('--architectures', default='binary-amd64,source', help='Architectures to analyze')
+    parser.add_argument('--distributions', default='stable', help='Distributions to analyze')
     return parser.parse_args()
 
 def download_packages_gz(url):
@@ -81,7 +81,7 @@ def import_repository(args):
     for dist in distributions:
         for component in components:
             for arch in architectures:
-                url = f"{base_url}/dists/{dist}/{component}/binary-{arch}/Packages.gz"
+                url = f"{base_url}/dists/{dist}/{component}/{arch}/Packages.gz"
                 print(f"Processing: {url}")
                 
                 packages_gz_path = download_packages_gz(url)
@@ -90,7 +90,7 @@ def import_repository(args):
                 
                 packages = parse_packages_gz(packages_gz_path)
                 
-                output_dir = os.path.join(args.output_dir, dist, component, f"binary-{arch}")
+                output_dir = os.path.join(args.output_dir, dist, component, f"{arch}")
                 create_file_structure(packages, output_dir)
                 
                 os.unlink(packages_gz_path)
