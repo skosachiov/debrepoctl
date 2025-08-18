@@ -19,3 +19,4 @@ commit
 commit
 push
 git diff main...HEAD
+git diff master --name-status
