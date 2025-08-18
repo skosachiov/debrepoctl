@@ -69,7 +69,7 @@ def create_file_structure(packages, output_dir):
         
         os.makedirs(dir_path, exist_ok=True)
         
-        with open(file_path + '.stanza', 'w') as f:
+        with open(file_path, 'w') as f:
             for key, value in pkg.items():
                 f.write(f"{key}: {value}\n")
             f.write("\n")
@@ -128,7 +128,7 @@ def export_packages_file(args):
     output_file = os.path.join(args.output_dir, 'Packages')
     
     with open(output_file, 'w') as out_f:
-        for stanza_file in input_dir.rglob('*.stanza'):
+        for stanza_file in input_dir.rglob('*'):
             with open(stanza_file, 'r') as in_f:
                 out_f.write(in_f.read())
     
