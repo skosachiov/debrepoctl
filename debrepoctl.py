@@ -57,9 +57,11 @@ def parse_packages_gz(packages_gz_path):
 def create_file_structure(packages, output_dir):
     for pkg in packages:
         if 'Filename' not in pkg:
-            continue
-            
-        filename = pkg['Filename']
+            if 'Directory' not in pkg:
+                continue
+            filename = f'{pkg["Directory"]}/{pkg["Package"]}_{pkg["Version"]}.dsc'
+        else:
+            filename = pkg['Filename']
         parts = Path(filename).parts
         filename = Path(*parts[3:])
         file_path = os.path.join(output_dir, filename)
@@ -105,7 +107,7 @@ def import_local(args):
     
     for root, _, files in os.walk(local_dir):
         for file in files:
-            if file == 'Packages.gz':
+            if file in ('Packages.gz', 'Sources.gz'):
                 packages_gz_path = os.path.join(root, file)
                 print(f"Processing local file: {packages_gz_path}")
                 
