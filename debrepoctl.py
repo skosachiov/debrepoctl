@@ -82,6 +82,8 @@ def import_repository(args):
         for component in components:
             for arch in architectures:
                 url = f"{base_url}/dists/{dist}/{component}/{arch}/Packages.gz"
+                if arch == "source":
+                    url = f"{base_url}/dists/{dist}/{component}/{arch}/Sources.gz"
                 print(f"Processing: {url}")
                 
                 packages_gz_path = download_packages_gz(url)
