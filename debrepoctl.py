@@ -164,82 +164,30 @@ def read_packages_dir(input_dir):
         if not stanza_file.is_file(): continue
         with open(stanza_file, 'r') as in_f:
             lines.append(in_f.read())
-    return "".join(lines)
+    return "".join(lines).splitlines()
 
-def remove_packages(package_names, output_dir):
+def remove_packages(lines, output_dir):
     if not os.path.exists(output_dir):
         return
-
-    packages_to_remove = set(package_names)
-    
-    for root, dirs, files in os.walk(output_dir, topdown=False):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            
-            # Read the package name from the stanza file
-            try:
-                with open(filepath, 'r') as f:
-                    for line in f:
-                        if line.startswith('Package:'):
-                            pkg_name = line.split(':', 1)[1].strip()
-                            if pkg_name in packages_to_remove:
-                                os.remove(filepath)
-                                print(f"Removed package: {pkg_name} ({filename})")
-                                break
-            except (OSError, UnicodeDecodeError) as e:
-                print(f"Error reading file {filepath}: {e}")
-                continue
-        
-        # Remove empty directories after processing files
-        for dirname in dirs:
-            dirpath = os.path.join(root, dirname)
-            try:
-                if not os.listdir(dirpath):
-                    os.rmdir(dirpath)
-                    print(f"Removed empty directory: {os.path.relpath(dirpath, output_dir)}")
-            except (OSError, FileNotFoundError):
-                pass
+    packages = parse_packages(read_packages_dir(output_dir))
+    packages_dict = {}
+    for p in packages:
+        print(p)
+        if all(key in p for key in ('Package', 'Version')):
+            packages_dict[(p['Package'], p['Version'])] = p
+    print(packages_dict)
+    for line in lines:
+        if not packages_dict.pop(tuple(line.split('=')), None):
+            print("Key not found")
+        else:
+            print("Remove line", line)
+    remove_no_longer_exist(packages_dict.values(), output_dir)
 
 def copy_packages(package_names, input_dir, output_dir):
-
-    if not os.path.exists(input_dir):
-        print(f"Error: Input directory not found: {input_dir}")
+    if not os.path.exists(output_dir):
         return
-    
-    # Create output directory if it doesn't exist
-    os.makedirs(output_dir, exist_ok=True)
-    
-    # Create a set for faster lookup
-    packages_to_copy = set(package_names)
-    copied_count = 0
-    
-    # Walk through input directory to find matching packages
-    for root, _, files in os.walk(input_dir):
-        for filename in files:
-            filepath = os.path.join(root, filename)
-            
-            # Read the package name from the stanza file
-            try:
-                with open(filepath, 'r') as f:
-                    for line in f:
-                        if line.startswith('Package:'):
-                            pkg_name = line.split(':', 1)[1].strip()
-                            if pkg_name in packages_to_copy:
-                                # Determine relative path and create destination
-                                rel_path = os.path.relpath(filepath, input_dir)
-                                dest_path = os.path.join(output_dir, rel_path)
-                                dest_dir = os.path.dirname(dest_path)
-                                
-                                os.makedirs(dest_dir, exist_ok=True)
-                                shutil.copy2(filepath, dest_path)
-                                copied_count += 1
-                                print(f"Copied package: {pkg_name} to {dest_path}")
-                                break
-            except (OSError, UnicodeDecodeError) as e:
-                print(f"Error reading file {filepath}: {e}")
-                continue
-    
-    print(f"Copied {copied_count} packages from {input_dir} to {output_dir}")
+    packages = parse_packages(read_packages_dir(input_dir))
+    create_file_structure(packages, output_dir)
 
 def main():
     args = parse_arguments()
@@ -261,9 +209,9 @@ def main():
             return
         print(read_packages_dir(args.input_dir))
     elif args.remove:
-        remove_packages(lines, output_dir)
+        remove_packages(lines, args.output_dir)
     elif args.copy:
-        copy_packages(lines, input_dir, output_dir)
+        copy_packages(lines, args.input_dir, args.output_dir)
 
 if __name__ == '__main__':
     main()
