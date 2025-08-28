@@ -1,0 +1,864 @@
+Package: aft
+Version: 2:5.098-7
+Installed-Size: 262
+Maintainer: Debian QA Group <packages@qa.debian.org>
+Architecture: all
+Depends: perl:any (>= 5.6)
+Description: "free form" document preparation system
+Homepage: http://www.maplefish.com/todd/aft.html
+Description-md5: ff4835b187300146cdcd26e4be8dd4d7
+Tag: implemented-in::perl, interface::commandline, role::program,
+ scope::utility, use::converting, use::text-formatting,
+ use::typesetting, works-with-format::html, works-with-format::tex,
+ works-with::text
+Section: text
+Priority: optional
+Filename: pool/main/a/aft/aft_5.098-7_all.deb
+Size: 64620
+MD5sum: 27132c33a680d7e7af80978dc475d8f2
+SHA256: b9d8d64b28263a45d243efcc90390bfbe103022d30610adb2d84be915ee2f209
+
+Package: libafterburner.fx-java
+Source: afterburner.fx
+Version: 1.7.0-3
+Installed-Size: 43
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Architecture: all
+Depends: libatinject-jsr330-api-java, libgeronimo-annotation-1.3-spec-java, libopenjfx-java
+Suggests: libafterburner.fx-java-doc
+Description: minimalistic JavaFX MVP framework
+Homepage: http://afterburner.adam-bien.com
+Description-md5: 0e2d3f5d3002b444b5e27ff333f72fd5
+Section: java
+Priority: optional
+Filename: pool/main/a/afterburner.fx/libafterburner.fx-java_1.7.0-3_all.deb
+Size: 19180
+MD5sum: d8c6520dcc2601cf87277626ba26df73
+SHA256: f775fe57d3ecdc94937076ffa25a0eb9947d27e6683b4afecd74606fce6b285f
+
+Package: libafterburner.fx-java-doc
+Source: afterburner.fx
+Version: 1.7.0-3
+Installed-Size: 1581
+Maintainer: Debian Java Maintainers <pkg-java-maintainers@lists.alioth.debian.org>
+Architecture: all
+Recommends: default-jdk-doc, libatinject-jsr330-api-java-doc
+Suggests: libafterburner.fx-java
+Description: Documentation for afterburner.fx
+Homepage: http://afterburner.adam-bien.com
+Description-md5: 555f35e1c26916f0e4238429a197d0db
+Section: doc
+Priority: optional
+Filename: pool/main/a/afterburner.fx/libafterburner.fx-java-doc_1.7.0-3_all.deb
+Size: 300804
+MD5sum: a3b758092861e8375d81a1b8d1bb6860
+SHA256: a6e07a380b8d3dc2be5c532e06c8a45389ece392398c16085baf9f8df6a5d9b6
+
+Package: afterstep
+Version: 2.2.12-18
+Installed-Size: 1218
+Maintainer: Robert Luberda <robert@debian.org>
+Architecture: amd64
+Provides: x-window-manager
+Depends: afterstep-data (= 2.2.12-18), rxvt-unicode | x-terminal-emulator, imagemagick, menu, menu-xdg, sensible-utils, ucf, perl:any, libafterimage0t64 (>= 2.2.12), libafterstep1t64 (>= 2.2.12), libc6 (>= 2.34), libdbus-1-3 (>= 1.9.14), libglib2.0-0t64 (>= 2.26.0), libgtk2.0-0t64 (>= 2.8.0), libreadline8t64 (>= 6.0), libx11-6, libxext6
+Recommends: gnome-themes-extra
+Suggests: asclock | wmitime, asmail, asmon, mc, wmcpuload, xscreensaver
+Description: window manager with the NEXTSTEP look and feel
+Multi-Arch: foreign
+Homepage: http://www.afterstep.org/
+Description-md5: d34d45817d3b122e341c7841a63b70c5
+Tag: implemented-in::c, interface::graphical, interface::x11, role::program,
+ suite::gnustep, uitoolkit::gtk, uitoolkit::ncurses, x11::applet,
+ x11::application, x11::window-manager
+Section: x11
+Priority: optional
+Filename: pool/main/a/afterstep/afterstep_2.2.12-18_amd64.deb
+Size: 453132
+MD5sum: 01d2f97de0002fd4e65385a847fcfaf4
+SHA256: 84e534207f3346eb53d05c7f97775818c9b51ecaed29d6156a57e891f5643070
+
+Package: afterstep-data
+Source: afterstep
+Version: 2.2.12-18
+Installed-Size: 5301
+Maintainer: Robert Luberda <robert@debian.org>
+Architecture: all
+Depends: fonts-freefont-ttf, sensible-utils, ucf (>= 1.17)
+Recommends: afterstep (= 2.2.12-18)
+Description: data files for AfterStep window manager
+Multi-Arch: foreign
+Homepage: http://www.afterstep.org/
+Description-md5: 3697b2f757ada549aeb0717a85629d58
+Tag: role::app-data
+Section: x11
+Priority: optional
+Filename: pool/main/a/afterstep/afterstep-data_2.2.12-18_all.deb
+Size: 3085116
+MD5sum: 951b555d3214a19129f13b8ba94af24b
+SHA256: 21ab9e7e6ad5fa227ed45f72b7c4c1a29e74ba8d013b2717309e74a3632ba28a
+
+Package: libafterimage-dev
+Source: afterstep
+Version: 2.2.12-18
+Installed-Size: 2376
+Maintainer: Robert Luberda <robert@debian.org>
+Architecture: amd64
+Depends: freeglut3-dev, libafterimage0t64 (= 2.2.12-18), libc6-dev | libc-dev, libfreetype-dev, libice-dev, libjpeg-dev, libpng-dev, librsvg2-dev, libsm-dev, libtiff-dev, libxext-dev, libxinerama-dev, zlib1g-dev (>= 1:1.1.4)
+Description: imaging library designed for AfterStep - development files
+Homepage: http://www.afterstep.org/
+Description-md5: 3695b6bea04881b4edf0cd7a5e0cb246
+Tag: devel::lang:c, devel::library, implemented-in::c, interface::graphical,
+ interface::x11, role::devel-lib, role::program
+Section: libdevel
+Priority: optional
+Filename: pool/main/a/afterstep/libafterimage-dev_2.2.12-18_amd64.deb
+Size: 713812
+MD5sum: 9bba6a8433e15963c94f2236e03b3a1d
+SHA256: 06901f2fbfad2e75c55364925e1a091f06b19a43dd40eedd2cba231bf8ff7047
+
+Package: libafterimage0t64
+Source: afterstep
+Version: 2.2.12-18
+Installed-Size: 765
+Maintainer: Robert Luberda <robert@debian.org>
+Architecture: amd64
+Replaces: libafterimage0
+Provides: libafterimage0 (= 2.2.12-18)
+Depends: libc6 (>= 2.38), libfreetype6 (>= 2.2.1), libgdk-pixbuf-2.0-0 (>= 2.22.0), libglib2.0-0t64 (>= 2.12.0), libjpeg62-turbo (>= 1.3.1), libpng16-16t64 (>= 1.6.2), librsvg2-2 (>= 2.14.4), libtiff6 (>= 4.0.3), libx11-6, libxext6
+Breaks: libafterimage0 (<< 2.2.12-18)
+Description: imaging library designed for AfterStep - runtime files
+Multi-Arch: same
+Homepage: http://www.afterstep.org/
+Description-md5: e732b13d84b7e0cadf42cef32865b18f
+Section: libs
+Priority: optional
+Filename: pool/main/a/afterstep/libafterimage0t64_2.2.12-18_amd64.deb
+Size: 313328
+MD5sum: 44089e10a907893c04c63e22250ef18c
+SHA256: 60995744024391a0aa2b81009481308f58b5f8e36b417a789d6520f472238b29
+
+Package: libafterstep1t64
+Source: afterstep
+Version: 2.2.12-18
+Installed-Size: 1042
+Maintainer: Robert Luberda <robert@debian.org>
+Architecture: amd64
+Replaces: libafterstep1
+Provides: libafterstep1 (= 2.2.12-18)
+Depends: sensible-utils, libafterimage0t64 (>= 2.2.12), libc6 (>= 2.33), libgdk-pixbuf-2.0-0 (>= 2.22.0), libglib2.0-0t64 (>= 2.12.0), libgtk2.0-0t64 (>= 2.8.0), libx11-6, libxext6, libxinerama1 (>= 2:1.1.4)
+Breaks: libafterstep1 (<< 2.2.12-18)
+Description: shared libraries for the AfterStep window manager
+Multi-Arch: same
+Homepage: http://www.afterstep.org/
+Description-md5: aaa29f714fcfa5fc5a73052c11dac9d0
+Section: libs
+Priority: optional
+Filename: pool/main/a/afterstep/libafterstep1t64_2.2.12-18_amd64.deb
+Size: 370688
+MD5sum: 4babe7d8beecc9a0b412d3eb3a1b0a90
+SHA256: 6543a2fb6e9c41ef19c35f1a730200ca27657286d889f9a640bf1df33cfd9a50
+
+Package: afuse
+Source: afuse (0.5.0-0.1)
+Version: 0.5.0-0.1+b1
+Installed-Size: 65
+Maintainer: Varun Hiremath <varun@debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34), libfuse2t64 (>= 2.6)
+Description: automounting file system implemented in user-space using FUSE
+Homepage: https://github.com/pcarrier/afuse
+Description-md5: 602bf8a6925e536531c3f47c66ff31b9
+Tag: implemented-in::c, interface::shell, network::client, role::program
+Section: utils
+Priority: optional
+Filename: pool/main/a/afuse/afuse_0.5.0-0.1+b1_amd64.deb
+Size: 20328
+MD5sum: 3ad840385fa433a0e6a124b7d6d8c85b
+SHA256: cd72308198432949031e5f98c6e198ea4d6b6f69fc577fd7be5d9826e8d73fd3
+
+Package: agda
+Version: 2.6.4.3-1
+Installed-Size: 20
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Architecture: all
+Depends: agda-bin, agda-stdlib, agda-stdlib-doc, elpa-agda2-mode, libghc-agda-dev
+Description: dependently typed functional programming language
+Homepage: https://wiki.portal.chalmers.se/agda/
+Description-md5: 65333dc4f3e4d00a90419d96d9785d24
+Tag: role::metapackage
+Section: misc
+Priority: optional
+Filename: pool/main/a/agda/agda_2.6.4.3-1_all.deb
+Size: 12148
+MD5sum: bfc25828e4f60479086cb5d3935176f2
+SHA256: feb2fcbb266bdf04ffcebf60b06ac967e3b5f3ceea399b4f0d03ad9ac8c8ff47
+
+Package: agda-bin
+Source: agda (2.6.4.3-1)
+Version: 2.6.4.3-1+b2
+Installed-Size: 66534
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.38), libffi8 (>= 3.4), libgmp10 (>= 2:6.3.0+dfsg), libnuma1 (>= 2.0.11), libtinfo6 (>= 6), zlib1g (>= 1:1.1.4), libghc-agda-dev (<< 2.6.4.3+~), libghc-agda-dev (>= 2.6.4.3)
+Suggests: elpa-agda2-mode
+Description: commandline interface to Agda
+Homepage: https://wiki.portal.chalmers.se/agda/
+Description-md5: f8e26d204d9ccc3a3cfdad460ae35595
+Tag: devel::testing-qa, interface::commandline, role::program,
+ uitoolkit::ncurses
+Section: haskell
+Priority: optional
+Filename: pool/main/a/agda/agda-bin_2.6.4.3-1+b2_amd64.deb
+Size: 9846396
+MD5sum: 8c4b6c13672cd5af0666810071fe707a
+SHA256: 31052ce0b53e9cf061c9386a0416525318a66bbd1bfaa4bef93f0f43dec8b748
+
+Package: elpa-agda2-mode
+Source: agda
+Version: 2.6.4.3-1
+Installed-Size: 211
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Architecture: all
+Depends: agda-bin (<< 2.6.4.3-1.1~), agda-bin (>= 2.6.4.3-1), libghc-agda-dev (<< 2.6.4.3-1.1~), libghc-agda-dev (>= 2.6.4.3-1), dh-elpa-helper, emacsen-common
+Recommends: emacs (>= 46.0)
+Enhances: emacs, emacs24
+Description: dependently typed functional programming language — emacs mode
+Homepage: https://wiki.portal.chalmers.se/agda/
+Description-md5: 7cfcb4a5e7415e1476d23d2fd002910b
+Section: editors
+Priority: optional
+Filename: pool/main/a/agda/elpa-agda2-mode_2.6.4.3-1_all.deb
+Size: 51316
+MD5sum: 190f27332e0fd8eb44a5296e92b9cc0a
+SHA256: c7f72898430334f0c80f3cbe5f44b5a9c7752755c262f84d6ae58921e59328ad
+
+Package: libghc-agda-dev
+Source: agda (2.6.4.3-1)
+Version: 2.6.4.3-1+b2
+Installed-Size: 214834
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Architecture: amd64
+Provides: libghc-agda-dev-2.6.4.3-a7afe
+Depends: libghc-aeson-dev-2.1.2.1-bcb88, libghc-ansi-terminal-dev-1.0.2-25450, libghc-array-dev-0.5.6.0-65c23, libghc-async-dev-2.2.5-51753, libghc-base-dev-4.18.2.1-8e81e, libghc-binary-dev-0.8.9.1-8e26a, libghc-blaze-html-dev-0.9.2.0-cce28, libghc-boxes-dev-0.1.5-3094f, libghc-bytestring-dev-0.11.5.3-7048d, libghc-case-insensitive-dev-1.2.1.0-94a09, libghc-containers-dev-0.6.7-7a228, libghc-data-hash-dev-0.2.0.1-209dc, libghc-deepseq-dev-1.4.8.1-9013f, libghc-directory-dev-1.3.8.5-98ebe, libghc-dlist-dev-1.0-d3ec3, libghc-edit-distance-dev-0.2.2.1-79404, libghc-equivalence-dev-0.4.1-6eeb5, libghc-exceptions-dev-0.10.7-0356d, libghc-filepath-dev-1.4.300.1-f6cd4, libghc-ghc-compact-dev-0.1.0.0-8f95f, libghc-gitrev-dev-1.3.1-44bc9, libghc-hashable-dev-1.4.4.0-fb202, libghc-haskeline-dev-0.8.2.1-2332e, libghc-monad-control-dev-1.0.3.1-b8be8, libghc-mtl-dev-2.3.1-f8119, libghc-murmur-hash-dev-0.1.0.10-8fe95, libghc-parallel-dev-3.2.2.0-0f7bd, libghc-peano-dev-0.1.0.2-b239f, libghc-pretty-dev-1.1.3.6-8f6c9, libghc-process-dev-1.6.19.0-48ee2, libghc-regex-tdfa-dev-1.3.2.2-429e6, libghc-split-dev-0.2.5-3cfdd, libghc-stm-dev-2.5.1.0-99e80, libghc-stmonadtrans-dev-0.4.8-b519e, libghc-strict-dev-0.5-aee4d, libghc-text-dev-2.0.2-5b954, libghc-time-compat-dev-1.9.6.1-a9589, libghc-time-dev-1.12.2-eb20f, libghc-transformers-dev-0.6.1.0-5335d, libghc-unordered-containers-dev-0.2.20-a0e00, libghc-uri-encode-dev-1.5.0.7-4fa87, libghc-vector-dev-0.13.1.0-ca5d5, libghc-vector-hashtables-dev-0.1.2.0-15588, libghc-zlib-dev-0.6.3.0-436de, libc6 (>= 2.29), libgmp10 (>= 2:6.3.0+dfsg), libtinfo6 (>= 6), zlib1g (>= 1:1.1.4)
+Description: dependently typed functional programming language
+Homepage: https://wiki.portal.chalmers.se/agda/
+Description-md5: 367dee38c949eb56c7f0325161eedb49
+Ghc-Package: Agda-2.6.4.3-41i63oF2y9sGNBnLV2if1i
+Section: haskell
+Priority: optional
+Filename: pool/main/a/agda/libghc-agda-dev_2.6.4.3-1+b2_amd64.deb
+Size: 22821040
+MD5sum: 914d949be44e5a6ecf2fc4b963e69978
+SHA256: 58d8551bec42796d2aa9f6baaa253eb23095e118869fe235be6d4aa2e130ce60
+
+Package: libghc-agda-doc
+Source: agda
+Version: 2.6.4.3-1
+Installed-Size: 181250
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Architecture: all
+Replaces: haskell-agda-doc
+Provides: haskell-agda-doc
+Depends: haddock-interface-42
+Recommends: ghc-doc, libghc-aeson-doc, libghc-agda-dev, libghc-ansi-terminal-doc, libghc-async-doc, libghc-blaze-html-doc, libghc-boxes-doc, libghc-case-insensitive-doc, libghc-data-hash-doc, libghc-dlist-doc, libghc-edit-distance-doc, libghc-equivalence-doc, libghc-gitrev-doc, libghc-hashable-doc, libghc-monad-control-doc, libghc-murmur-hash-doc, libghc-parallel-doc, libghc-peano-doc, libghc-regex-tdfa-doc, libghc-split-doc, libghc-stmonadtrans-doc, libghc-strict-doc, libghc-time-compat-doc, libghc-unordered-containers-doc, libghc-uri-encode-doc, libghc-vector-doc, libghc-vector-hashtables-doc, libghc-zlib-doc, libjs-mathjax
+Conflicts: haskell-agda-doc (<< 2.2.6-5)
+Description: dependently typed functional programming language; documentation
+Homepage: https://wiki.portal.chalmers.se/agda/
+Description-md5: 42838d7e4b43bdeee8091f83a2111b33
+Tag: devel::doc, made-of::html, role::documentation
+Section: doc
+Priority: optional
+Filename: pool/main/a/agda/libghc-agda-doc_2.6.4.3-1_all.deb
+Size: 7489680
+MD5sum: 7718e69dc7f2882e82322fcc93f2725e
+SHA256: a2db59f1bc548771ead9072610399db698ac44c7a988ade3e8f545e55a40c4f1
+
+Package: agda-stdlib
+Version: 2.1-4
+Installed-Size: 184515
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Architecture: all
+Depends: libghc-agda-dev (>= 2.6.4.3), libghc-agda-dev (<< 2.6.4.4~)
+Enhances: elpa-agda2-mode
+Description: standard library for Agda
+Homepage: https://wiki.portal.chalmers.se/agda/
+Description-md5: c45346ed5a4053d9d174e9325e0d533b
+Tag: role::shared-lib
+Section: libs
+Priority: optional
+Filename: pool/main/a/agda-stdlib/agda-stdlib_2.1-4_all.deb
+Size: 143710196
+MD5sum: d40586c5926b501702fdecf55e4c56b5
+SHA256: c435312f36f041297d3d2e92d2763829b506958542ab78641faadc2b6d9abe1d
+
+Package: agda-stdlib-doc
+Source: agda-stdlib
+Version: 2.1-4
+Installed-Size: 52984
+Maintainer: Debian Haskell Group <pkg-haskell-maintainers@lists.alioth.debian.org>
+Architecture: all
+Suggests: agda-stdlib
+Description: standard library for Agda — documentation
+Multi-Arch: foreign
+Homepage: https://wiki.portal.chalmers.se/agda/
+Description-md5: fd3b8a8baa471f456e06046d5280b6e7
+Tag: devel::doc, made-of::html, role::documentation
+Section: doc
+Priority: optional
+Filename: pool/main/a/agda-stdlib/agda-stdlib-doc_2.1-4_all.deb
+Size: 3780056
+MD5sum: 46b40be6f2e768afd460fe3c130978fa
+SHA256: dcd0eb7f60d5d2f80813044c0d92cc1b9f6923f869f9d699588adb77a45cfd2f
+
+Package: age
+Source: age (1.2.1-1)
+Version: 1.2.1-1+b5
+Installed-Size: 6824
+Maintainer: Debian Go Packaging Team <team+pkg-go@tracker.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34)
+Description: simple, modern and secure encryption tool
+Homepage: https://github.com/FiloSottile/age
+Built-Using: golang-1.24 (= 1.24.4-1), golang-filippo-edwards25519 (= 1.0.0~rc1+git20210721-0.1), golang-go.crypto (= 1:0.25.0-1), golang-golang-x-sys (= 0.22.0-1), golang-golang-x-term (= 0.22.0-1)
+Description-md5: 85dd9ab1e3fd8da906518326d4c6e3d4
+Section: utils
+Priority: optional
+Filename: pool/main/a/age/age_1.2.1-1+b5_amd64.deb
+Size: 1665976
+MD5sum: b5ec45dcfe72159d2f45a955b264d886
+SHA256: a87ab5ba69a99bc6d8c95935ae467fa877daef50d11d9dabe0520ae01411f85c
+
+Package: golang-filippo-age-dev
+Source: age
+Version: 1.2.1-1
+Installed-Size: 244
+Maintainer: Debian Go Packaging Team <team+pkg-go@tracker.debian.org>
+Architecture: all
+Description: simple, modern and secure encryption tool (Go library)
+Multi-Arch: foreign
+Homepage: https://github.com/FiloSottile/age
+Description-md5: 8b90588a7b37f5c17ff387c184285947
+Section: golang
+Priority: optional
+Filename: pool/main/a/age/golang-filippo-age-dev_1.2.1-1_all.deb
+Size: 53092
+MD5sum: 006e9ee88354e20a697fe4c6bae51dd5
+SHA256: d457d161b684fd4db66cb430a7ddf8e29ffe17c87b6ffccf99ce46088055f350
+
+Package: agedu
+Version: 20211129.8cd63c5-1
+Installed-Size: 121
+Maintainer: Alexander Prinsier <aphexer@mailhaven.com>
+Architecture: amd64
+Depends: libc6 (>= 2.33)
+Description: Unix utility for tracking down wasted disk space
+Homepage: https://www.chiark.greenend.org.uk/~sgtatham/agedu/
+Description-md5: 9f67a1da7c038e24702713dc5d24e0cc
+Tag: admin::filesystem, implemented-in::c, interface::commandline,
+ role::program, use::searching, works-with::file
+Section: utils
+Priority: optional
+Filename: pool/main/a/agedu/agedu_20211129.8cd63c5-1_amd64.deb
+Size: 55772
+MD5sum: a9f9bb76d6aec90b1f03515062d4f205
+SHA256: da5aefb5204bb15e3e4ac06be9ed2160c9bfa1ea55e422b5fb2faa45bfef6def
+
+Package: agenda.app
+Version: 0.47-2
+Installed-Size: 929
+Maintainer: Debian GNUstep maintainers <pkg-gnustep-maintainers@lists.alioth.debian.org>
+Architecture: amd64
+Depends: gnustep-back-common (>= 0.31.0-3), gnustep-layout-multiarch, gnustep-back0.32, gnustep-base-runtime (>= 1.31.1), gnustep-gui-runtime (>= 0.32.0), libaddresses0.5.0 (>= 0.5.0), libc6 (>= 2.34), libdbuskit0 (>= 0.1.1), libgcc-s1 (>= 3.0), libgnustep-base1.31 (>= 1.31.1), libgnustep-gui0.32 (>= 0.32.0), libical3t64 (>= 3.0.0), libobjc4 (>= 4.6), libuuid1 (>= 2.16)
+Description: Calendar manager for GNUstep
+Homepage: https://github.com/poroussel/simpleagenda
+Description-md5: 84aeda73d4cbb1466d3e707eef0e7b08
+Tag: implemented-in::objc, interface::graphical, interface::x11,
+ role::program, scope::application, suite::gnustep, uitoolkit::gnustep,
+ use::organizing, use::timekeeping, works-with::pim, x11::application
+Section: gnustep
+Priority: optional
+Filename: pool/main/a/agenda.app/agenda.app_0.47-2_amd64.deb
+Size: 188972
+MD5sum: 9e8a7e1ce2f4c2b8d37303c889cb17e9
+SHA256: 519173a01f35cdf0439db7e81730888d2dc30c3c36d62415705742485318cecd
+
+Package: libagg-dev
+Source: agg
+Version: 1:2.7.0.r145+dfsg-2
+Installed-Size: 5704
+Maintainer: John Horigan <john@glyphic.com>
+Architecture: amd64
+Conflicts: libagg2-dev, libagg23-dev, libagg2t64
+Description: AntiGrain Geometry graphical toolkit (static development files)
+Multi-Arch: same
+Homepage: http://www.antigrain.com
+Description-md5: a2d885e53d68cb4a773454066d96672a
+Tag: devel::library, role::devel-lib
+Section: libdevel
+Priority: optional
+Filename: pool/main/a/agg/libagg-dev_2.7.0.r145+dfsg-2_amd64.deb
+Size: 1114036
+MD5sum: 4bb6b07fb56dd803606256630a941ff1
+SHA256: b268cc1932066c391448acf7aa4e5c82599c9e334df86f7624777fca901e8ed6
+
+Package: libagg2-dev
+Source: agg
+Version: 1:2.7.0.r145+dfsg-2
+Installed-Size: 5705
+Maintainer: John Horigan <john@glyphic.com>
+Architecture: amd64
+Depends: libagg2t64 (= 1:2.7.0.r145+dfsg-2)
+Conflicts: libagg-dev, libagg23-dev
+Description: AntiGrain Geometry graphical toolkit (static and shared development files)
+Multi-Arch: same
+Homepage: http://www.antigrain.com
+Description-md5: 4ce44c80b7226cf1ef262a4c9c3b409f
+Tag: devel::library, role::devel-lib
+Section: libdevel
+Priority: optional
+Filename: pool/main/a/agg/libagg2-dev_2.7.0.r145+dfsg-2_amd64.deb
+Size: 1114020
+MD5sum: 4fc98c6f1b647d740b8967a1dccb72a6
+SHA256: 3fcae5531d49783618fc87d08732ab0ce32b724ff6fb8401421e45b75b7387be
+
+Package: libagg2t64
+Source: agg
+Version: 1:2.7.0.r145+dfsg-2
+Installed-Size: 309
+Maintainer: John Horigan <john@glyphic.com>
+Architecture: amd64
+Replaces: libagg2
+Provides: libagg2 (= 1:2.7.0.r145+dfsg-2)
+Depends: libc6 (>= 2.38), libgcc-s1 (>= 3.0), libstdc++6 (>= 5)
+Conflicts: libagg-dev, libagg23-dev
+Breaks: libagg2 (<< 1:2.7.0.r145+dfsg-2)
+Description: AntiGrain Geometry graphical toolkit (runtime files)
+Multi-Arch: same
+Homepage: http://www.antigrain.com
+Description-md5: 2cbac8e5d0f10ef430c6669d31b6c72e
+Section: libs
+Priority: optional
+Filename: pool/main/a/agg/libagg2t64_2.7.0.r145+dfsg-2_amd64.deb
+Size: 97796
+MD5sum: 90eb138e92e334725d09b4bde683c2e5
+SHA256: 13d71ceed56e0783ac5b9e1e2ee1eec5584b2baf729764bfd2c919c88b8f8333
+
+Package: python3-aggdraw
+Source: aggdraw (1.3.19-1)
+Version: 1.3.19-1+b4
+Installed-Size: 216
+Maintainer: Debian GIS Project <pkg-grass-devel@lists.alioth.debian.org>
+Architecture: amd64
+Depends: python3 (<< 3.14), python3 (>= 3.13~), libc6 (>= 2.38), libfreetype6 (>= 2.2.1), libgcc-s1 (>= 3.0), libstdc++6 (>= 5)
+Description: High quality drawing interface for PIL - Python 3.X
+Homepage: https://github.com/pytroll/aggdraw
+Description-md5: 57e0e742cb9aa3711139f5f5c9e5156a
+Section: python
+Priority: optional
+Filename: pool/main/a/aggdraw/python3-aggdraw_1.3.19-1+b4_amd64.deb
+Size: 71936
+MD5sum: 6aafa3c81c2ff89063712fef4ef127ce
+SHA256: cd9b48b90a3063aa1076d37f2c9d621d8bcf565e2e0311d1a62642482e958369
+
+Package: aggregate
+Version: 1.6-8
+Installed-Size: 35
+Maintainer: Package Salvaging Team <team+salvage@tracker.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.34)
+Description: ipv4 cidr prefix aggregator
+Homepage: https://ftp.isc.org/isc/aggregate/
+Description-md5: f997a857d65d21bbf877320588a8a99c
+Tag: field::biology, field::biology:bioinformatics, implemented-in::c,
+ interface::commandline, network::configuration, network::routing,
+ protocol::ip, role::program, scope::utility, use::analysing,
+ use::configuring, use::converting, use::routing,
+ works-with-format::plaintext, works-with::network-traffic,
+ works-with::text
+Section: net
+Priority: optional
+Filename: pool/main/a/aggregate/aggregate_1.6-8_amd64.deb
+Size: 12540
+MD5sum: 0cadea2d1bdb5a031ffd80205da05a40
+SHA256: 069f7625fef2b20cc890e5a721a7b8daeb31d5de4f6555c669432b4980a0c14b
+
+Package: elpa-aggressive-indent
+Source: aggressive-indent-mode
+Version: 1.10.0+git20230112.1.a437a45-1
+Installed-Size: 622
+Maintainer: Debian QA Group <packages@qa.debian.org>
+Architecture: all
+Depends: dh-elpa-helper, emacsen-common, emacs
+Recommends: emacs (>= 46.0)
+Enhances: emacs
+Description: Emacs minor mode that reindents code after every change
+Homepage: https://github.com/Malabarba/aggressive-indent-mode
+Description-md5: 2e1729b6966ec5e212dc502e6a49b29f
+Section: lisp
+Priority: optional
+Filename: pool/main/a/aggressive-indent-mode/elpa-aggressive-indent_1.10.0+git20230112.1.a437a45-1_all.deb
+Size: 519904
+MD5sum: e795207a3c477b807a284076452e111e
+SHA256: f82a2bbc6cb34053ff1eb777d8681c8d7449f41c1bdb93b904095e73813c1fc1
+
+Package: aghermann
+Source: aghermann (1.1.2-5)
+Version: 1.1.2-5+b3
+Installed-Size: 1730
+Maintainer: Debian Med Packaging Team <debian-med-packaging@lists.alioth.debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.38), libcairo2 (>= 1.2.4), libconfig++11 (>= 1.7.3), libfftw3-double3 (>= 3.3.10), libgcc-s1 (>= 3.0), libglib2.0-0t64 (>= 2.32.0), libgomp1 (>= 6), libgsl28 (>= 2.8+dfsg), libgtk-3-0t64 (>= 3.21.5), libitpp8v5 (>= 4.3.1), liblua5.1-0 (>= 5.1.3), libpango-1.0-0 (>= 1.14.0), libsamplerate0 (>= 0.1.7), libstdc++6 (>= 14), libvte-2.91-0
+Suggests: edfbrowser
+Description: Sleep-research experiment manager
+Homepage: https://johnhommer.com/academic/code/aghermann
+Description-md5: 3f60235fc79bc4910bb594312f855a10
+Tag: field::medicine, interface::graphical, interface::x11, role::program,
+ uitoolkit::gtk, use::analysing, x11::application
+Section: science
+Priority: optional
+Filename: pool/main/a/aghermann/aghermann_1.1.2-5+b3_amd64.deb
+Size: 579672
+MD5sum: a6af8743e685199949f37757db3773d6
+SHA256: 701c3d71812961168609e71d2862ef29eae383eb995da3fde35b09c1b57aef01
+
+Package: aglfn
+Version: 1.7+git20191031.4036a9c-2
+Installed-Size: 123
+Maintainer: Debian Fonts Task Force <pkg-fonts-devel@lists.alioth.debian.org>
+Architecture: all
+Description: Adobe Glyph List For New Fonts
+Multi-Arch: foreign
+Homepage: https://github.com/adobe-type-tools/agl-aglfn
+Description-md5: 40806af3ac24bb24dab5ea0fd03065e5
+Tag: made-of::TODO, role::data
+Section: fonts
+Priority: optional
+Filename: pool/main/a/aglfn/aglfn_1.7+git20191031.4036a9c-2_all.deb
+Size: 30548
+MD5sum: 922fb76af1c8fd1b95c44f736f04bdac
+SHA256: a1f84fd142668ae45a778be057b8d8e6c01b39ac852505d3692d23a20492faab
+
+Package: cl-agnostic-lizard
+Source: agnostic-lizard
+Version: 0~git20201010.1.fe3a737-2
+Installed-Size: 118
+Maintainer: Debian Common Lisp Team <debian-common-lisp@lists.debian.org>
+Architecture: all
+Description: best-effort portable code walker for Common Lisp
+Homepage: https://gitlab.common-lisp.net/mraskin/agnostic-lizard
+Description-md5: 1d697e1dca6208ade3455729437e145f
+Section: lisp
+Priority: optional
+Filename: pool/main/a/agnostic-lizard/cl-agnostic-lizard_0~git20201010.1.fe3a737-2_all.deb
+Size: 19552
+MD5sum: 04706e0ef941cd2ff8aeaacf33ae222e
+SHA256: fca64fced4930be3337c3706a5f0a543843a61cd74ba027b70434d019b32f8c4
+
+Package: aha
+Version: 0.5.1-3
+Installed-Size: 54
+Maintainer: Axel Beckert <abe@debian.org>
+Architecture: amd64
+Depends: libc6 (>= 2.4)
+Description: ANSI color to HTML converter
+Homepage: https://github.com/theZiz/aha
+Description-md5: 0f17d309f135dcc8d21c8650ac0fb8c6
+Tag: implemented-in::c, interface::commandline, role::program,
+ scope::utility, use::converting, works-with-format::TODO,
+ works-with-format::html, works-with::TODO, works-with::text
+Section: utils
+Priority: optional
+Filename: pool/main/a/aha/aha_0.5.1-3_amd64.deb
+Size: 17348
+MD5sum: 70d098cf1ccbd8eee1b7c7e9d09ac4f2
+SHA256: baa71b8dc71c99e5cd1e2097d0d17e95223141df06479ec613e23c9e1021ad3d
+
+Package: ahcpd
+Version: 0.53-3
+Installed-Size: 84
+Maintainer: Stéphane Glondu <glondu@debian.org>
+Architecture: amd64
+Depends: lsb-base, libc6 (>= 2.15)
+Pre-Depends: init-system-helpers (>= 1.54~)
+Enhances: babeld
+Description: Ad-Hoc Configuration Protocol
+Homepage: https://www.irif.fr/~jch/software/ahcp/
+Description-md5: f1c1a025e99acd7afd0c2b29e5c5fdef
+Tag: implemented-in::c, network::configuration, protocol::ip, protocol::ipv6,
+ role::program
+Section: net
+Priority: optional
+Filename: pool/main/a/ahcpd/ahcpd_0.53-3_amd64.deb
+Size: 29084
+MD5sum: 1eb30668df368a172567d8e741e1c4e2
+SHA256: fc0e9377ffb3c8bfd05f1e6279fa555dbc96e6749e9b0bfed18ffb34b03b882b
+
+Package: libahven-dev
+Source: ahven
+Version: 2.8-11
+Installed-Size: 884
+Maintainer: Reto Buerki <reet@codelabs.ch>
+Architecture: amd64
+Replaces: libahven10-dev, libahven11-dev, libahven7-dev, libahven8-dev, libahven9-dev
+Provides: libahven-dev-c984d04b
+Depends: gnat (<< 15), gnat (>= 14), gnat-14, gnat-14-ade93c16, libahven31 (= 2.8-11)
+Suggests: libahven-doc
+Breaks: libahven10-dev, libahven11-dev, libahven7-dev, libahven8-dev, libahven9-dev
+Description: Unit test library for Ada (development)
+Homepage: https://www.ahven-framework.com/
+Description-md5: 6e54401a37b269c5decb82e27a009a12
+Section: libdevel
+Priority: optional
+Filename: pool/main/a/ahven/libahven-dev_2.8-11_amd64.deb
+Size: 135148
+MD5sum: 98511f63f0d7baa1f0ca06c0dfad3916
+SHA256: a0cf6d3e3cf48e865190bbd5ecb8d2dcae93f1d04375bbba54db54638e04f29d
+
+Package: libahven-doc
+Source: ahven
+Version: 2.8-11
+Installed-Size: 459
+Maintainer: Reto Buerki <reet@codelabs.ch>
+Architecture: all
+Depends: libjs-sphinxdoc (>= 8.1)
+Suggests: gnat
+Description: Unit test library for Ada (documentation)
+Multi-Arch: foreign
+Homepage: https://www.ahven-framework.com/
+Built-Using: sphinx (= 8.1.3-5)
+Description-md5: 193597313d174082ab3a9c35889e6112
+Section: doc
+Priority: optional
+Filename: pool/main/a/ahven/libahven-doc_2.8-11_all.deb
+Size: 63288
+MD5sum: 22fc2fa5a7665d2cf8f871a8d47f6e62
+SHA256: e0abaa7df7240115b5ecbc0183888494537b2cf01b3ca39211c09cf3a7585001
+
+Package: libahven31
+Source: ahven
+Version: 2.8-11
+Installed-Size: 271
+Maintainer: Reto Buerki <reet@codelabs.ch>
+Architecture: amd64
+Depends: libc6 (>= 2.14), libgcc-s1 (>= 3.0), libgnat-14 (>= 14.2.0)
+Description: Unit test library for Ada
+Multi-Arch: same
+Homepage: https://www.ahven-framework.com/
+Description-md5: 794b018c01b3cffba9255f940e351fb0
+Section: libs
+Priority: optional
+Filename: pool/main/a/ahven/libahven31_2.8-11_amd64.deb
+Size: 76420
+MD5sum: 79104d47fd037dfb0a9399969f42bb54
+SHA256: f21de289450ac43b3be448d801b14fbf1ed071c04699be3018fedd9a6bb3c40f
+
+Package: aide
+Version: 0.19.1-2
+Installed-Size: 326
+Maintainer: Aide Maintainers <aide@packages.debian.org>
+Architecture: amd64
+Replaces: aide-dynamic, aide-xen
+Provides: aide-binary
+Depends: libacl1 (>= 2.2.23), libaudit1 (>= 1:2.2.1), libc6 (>= 2.38), libcap2 (>= 1:2.10), libext2fs2t64 (>= 1.46.2), libnettle8t64 (>= 3.8), libpcre2-8-0 (>= 10.22), libselinux1 (>= 3.1~), zlib1g (>= 1:1.1.4)
+Recommends: aide-common (= 0.19.1-2)
+Suggests: figlet
+Description: Advanced Intrusion Detection Environment - dynamic binary
+Homepage: https://aide.github.io
+Description-md5: 1d70ba920a3b80bc791be197bf18814c
+Tag: implemented-in::c, interface::commandline, role::program,
+ scope::utility, security::ids, security::integrity, use::monitor,
+ works-with::file, works-with::mail
+Section: admin
+Priority: optional
+Filename: pool/main/a/aide/aide_0.19.1-2_amd64.deb
+Size: 146616
+MD5sum: 51e4c7db24d8dd8da40aa51d7c23292b
+SHA256: 3972a381ed26ca0328105f6566e49813beee7e00e23ca30642f9f015975696b6
+
+Package: aide-common
+Source: aide
+Version: 0.19.1-2
+Installed-Size: 511
+Maintainer: Aide Maintainers <aide@packages.debian.org>
+Architecture: all
+Depends: aide (>= 0.17), liblockfile1, ucf (>= 2.0020), debconf (>= 0.5) | debconf-2.0, systemd | systemd-standalone-sysusers | systemd-sysusers
+Recommends: cron | cron-daemon, bsd-mailx | mailx | s-nail
+Description: Advanced Intrusion Detection Environment - Common files
+Homepage: https://aide.github.io
+Description-md5: 7a8490e442a29581e6cca1b191be3f62
+Tag: role::app-data, role::program, security::ids
+Section: admin
+Priority: optional
+Filename: pool/main/a/aide/aide-common_0.19.1-2_all.deb
+Size: 119672
+MD5sum: 65993d70e9d3d364a5fcebc4a6a01c5f
+SHA256: 55bccf805a863f2bdc6e9e280b2da1c3e7ce8ec5350b5b147f9595d56a2e553b
+
+Package: aide-dynamic
+Source: aide
+Version: 0.19.1-2
+Installed-Size: 51
+Maintainer: Aide Maintainers <aide@packages.debian.org>
+Architecture: all
+Depends: aide (>= 0.17.3-5~)
+Recommends: aide-common (= 0.19.1-2)
+Description: Advanced Intrusion Detection Environment - transitional package
+Homepage: https://aide.github.io
+Description-md5: 8bf4f7566feb77cc67df60020394eaeb
+Tag: implemented-in::c, role::program, security::ids
+Section: admin
+Priority: optional
+Filename: pool/main/a/aide/aide-dynamic_0.19.1-2_all.deb
+Size: 35116
+MD5sum: ef558d9c0fa46ba12b107eefba04393a
+SHA256: e8634d1a40b5279bc9b73b112bdbcb015c5e17b4e4b6b0a01bcf35f68b91f886
+
+Package: aiksaurus
+Version: 1.2.1+dev-0.12-7.2
+Installed-Size: 50
+Maintainer: Jonas Smedegaard <dr@jones.dk>
+Architecture: amd64
+Replaces: libaiksaurus-bin
+Provides: libaiksaurus-bin
+Depends: libaiksaurus-1.2-0c2a (>= 1.2.1+dev-0.12), libc6 (>= 2.34), libgcc-s1 (>= 3.0), libstdc++6 (>= 13.1)
+Conflicts: libaiksaurus-bin
+Description: This package provides an English-language thesaurus (utility)
+Homepage: https://aiksaurus.sourceforge.net/
+Description-md5: c494eb72c833031f7ce7b583043fb07b
+Tag: interface::commandline, interface::graphical, interface::x11,
+ role::program, scope::utility, uitoolkit::gtk, use::checking,
+ works-with::dictionary, x11::application
+Section: text
+Priority: optional
+Filename: pool/main/a/aiksaurus/aiksaurus_1.2.1+dev-0.12-7.2_amd64.deb
+Size: 10692
+MD5sum: 53baf4da39bea674f3664fa36e9eaa97
+SHA256: cfaf36910c7e707f0d202cce705ec6581828eb20f0e063640d2887af45a5b0d1
+
+Package: libaiksaurus-1.2-0c2a
+Source: aiksaurus
+Version: 1.2.1+dev-0.12-7.2
+Installed-Size: 59
+Maintainer: Jonas Smedegaard <dr@jones.dk>
+Architecture: amd64
+Replaces: libaiksaurus-1.2-0, libaiksaurus0, libaiksaurus0c102
+Depends: libaiksaurus-1.2-data, libc6 (>= 2.14), libgcc-s1 (>= 3.0), libstdc++6 (>= 13.1)
+Conflicts: libaiksaurus-1.2-0, libaiksaurus0, libaiksaurus0c102
+Description: This package provides an English-language thesaurus (development)
+Homepage: https://aiksaurus.sourceforge.net/
+Description-md5: 547746dab61779644273faa87b90dbb6
+Tag: role::shared-lib
+Section: libs
+Priority: optional
+Filename: pool/main/a/aiksaurus/libaiksaurus-1.2-0c2a_1.2.1+dev-0.12-7.2_amd64.deb
+Size: 18436
+MD5sum: a9a569296c3d51ae36309a8c90623d3a
+SHA256: 7c48357e63dee2596f20882303bea49c8894c5f13094beb0c97e1db95550be9c
+
+Package: libaiksaurus-1.2-data
+Source: aiksaurus
+Version: 1.2.1+dev-0.12-7.2
+Installed-Size: 521
+Maintainer: Jonas Smedegaard <dr@jones.dk>
+Architecture: all
+Provides: libaiksaurus-data
+Conflicts: libaiksaurus-data
+Description: This package provides an English-language thesaurus (data)
+Homepage: https://aiksaurus.sourceforge.net/
+Description-md5: 5e419cb8b87fa0717be6e39b76c3acd5
+Tag: role::shared-lib
+Section: libs
+Priority: optional
+Filename: pool/main/a/aiksaurus/libaiksaurus-1.2-data_1.2.1+dev-0.12-7.2_all.deb
+Size: 278940
+MD5sum: 8af0fdae06caa9b601b9904e06d31d69
+SHA256: d6a166be25a40ad47842b874adff6cd4f2b7423034a37ac53ea4ed521e6ef8c0
+
+Package: libaiksaurus-1.2-dev
+Source: aiksaurus
+Version: 1.2.1+dev-0.12-7.2
+Installed-Size: 25
+Maintainer: Jonas Smedegaard <dr@jones.dk>
+Architecture: amd64
+Provides: libaiksaurus-dev
+Depends: libaiksaurus-1.2-0c2a (= 1.2.1+dev-0.12-7.2)
+Conflicts: libaiksaurus-dev
+Description: This package provides an English-language thesaurus (development files)
+Homepage: https://aiksaurus.sourceforge.net/
+Description-md5: 8fb88e76f401b43d4bf6041431214605
+Tag: devel::library, role::devel-lib
+Section: libdevel
+Priority: optional
+Filename: pool/main/a/aiksaurus/libaiksaurus-1.2-dev_1.2.1+dev-0.12-7.2_amd64.deb
+Size: 5856
+MD5sum: e106ddb2c8535fcaec3553cc028301fb
+SHA256: 826f8cb24c281e8b437f412751e13183bbb6857a36cced699ce6f9e2e97f47cb
+
+Package: python3-aioeapi
+Source: aio-eapi
+Version: 0.6.3-6
+Installed-Size: 43
+Maintainer: Daniel Baumann <daniel@debian.org>
+Architecture: all
+Depends: python3-httpx, python3:any
+Description: Arista EOS API asyncio Client
+Homepage: https://github.com/jeremyschulman/aio-eapi
+Description-md5: 096978a2a89c9f1801935afc80961486
+Section: python
+Priority: optional
+Filename: pool/main/a/aio-eapi/python3-aioeapi_0.6.3-6_all.deb
+Size: 9124
+MD5sum: ec5c2f0932e27771caac9ae413191d3d
+SHA256: a437341c92d11a0020e05fb6460f118ab6a7e08fb00a9d91e04ae67887aa16d9
+
+Package: python3-aioairzone
+Source: aioairzone
+Version: 1.0.0-1
+Installed-Size: 139
+Maintainer: Debian Python Team <team+python@tracker.debian.org>
+Architecture: all
+Depends: python3-aiohttp, python3:any
+Description: Asynchronous Python library for managing Airzone HVAC systems
+Homepage: https://github.com/Noltari/aioairzone
+Description-md5: a3c5a801659d2a1385bd8845672e8a89
+Section: python
+Priority: optional
+Filename: pool/main/a/aioairzone/python3-aioairzone_1.0.0-1_all.deb
+Size: 21132
+MD5sum: beea87cd8811ffff6b7a2675e83fc007
+SHA256: ea99bff8204598b59f34d1aaa7278ae49a231d094da3300cdcd75d1a90772af8
+
+Package: python3-aioaseko
+Source: aioaseko
+Version: 1.0.0-2
+Installed-Size: 51
+Maintainer: Debian Python Team <team+python@tracker.debian.org>
+Architecture: all
+Depends: python3-aiohttp, python3-apischema, python3-gql, python3:any
+Description: Async Python package for the Aseko Pool Live API
+Homepage: https://github.com/milanmeu/aioaseko
+Description-md5: 1b0fd58a66aa092f4a6a9788aa1aad6d
+Section: python
+Priority: optional
+Filename: pool/main/a/aioaseko/python3-aioaseko_1.0.0-2_all.deb
+Size: 7912
+MD5sum: 34f77298998a0b85f7f13594d55b378f
+SHA256: da32d26a3bbf34e022c9dcc1bd9ab9e2832fdef964230517912d2338b9a87cf1
+
+Package: python3-aiobafi6
+Source: aiobafi6
+Version: 0.9.0-2
+Installed-Size: 105
+Maintainer: Debian Python Team <team+python@tracker.debian.org>
+Architecture: all
+Depends: python3-protobuf, python3-zeroconf, python3:any
+Description: Asynchronous Python library for controlling Big Ass Fans via the i6 protocol
+Homepage: https://github.com/jfroy/aiobafi6
+Description-md5: 45b4b7f693cd8fa8aaf1ca0c453c8873
+Section: python
+Priority: optional
+Filename: pool/main/a/aiobafi6/python3-aiobafi6_0.9.0-2_all.deb
+Size: 20104
+MD5sum: c72215d8a275ce2ff1e8cc876f800210
+SHA256: e69455c4c6fe2d1dddf8858b0537b4911791c61783cd0f219fe97162cf13cfe9
+
