@@ -60,11 +60,12 @@
 ## Example Git Diff Output
 ```
 $ git diff master --name-status
-D       dists/trixie/main/binary-amd64/aiobafi6/python3-aiobafi6_0.9.0-2_all.deb
-A       dists/trixie/main/binary-amd64/canna/canna-utils_3.7p3-25_amd64.deb
-A       dists/trixie/main/binary-amd64/canna/canna_3.7p3-25_amd64.deb
-A       dists/trixie/main/binary-amd64/canna/libcanna1g-dev_3.7p3-25_amd64.deb
-A       dists/trixie/main/binary-amd64/canna/libcanna1g_3.7p3-25_amd64.deb
+
+D       dists/trixie/main/binary-amd64/a/aiobafi6/python3-aiobafi6_0.9.0-2_all.deb
+A       dists/trixie/main/binary-amd64/c/canna/canna-utils_3.7p3-25_amd64.deb
+A       dists/trixie/main/binary-amd64/c/canna/canna_3.7p3-25_amd64.deb
+A       dists/trixie/main/binary-amd64/c/canna/libcanna1g-dev_3.7p3-25_amd64.deb
+A       dists/trixie/main/binary-amd64/c/canna/libcanna1g_3.7p3-25_amd64.deb
 ```
 
 ## import 
@@ -89,3 +90,7 @@ commit
 push
 git diff main...HEAD
 git diff master --name-status
+
+## keep config
+
+folder .debrepoctl
