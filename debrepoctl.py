@@ -13,16 +13,15 @@ import logging
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Debian Packages Analyzer')
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('-r', '--import-repo', help='Import from Debian repository URL (e.g., https://ftp.debian.org/debian/)')
+    group.add_argument('-r', '--import-repo', help='Import from Debian repository URL (e.g., https://ftp.debian.org/debian/dists/trixie)')
     group.add_argument('-l', '--import-local', help='Import from local directory containing Packages.gz files')
-    group.add_argument('-x', '--export', action='store_true', help='Export concatenated Packages files from --input-dir to stdout')
-    group.add_argument('-e', '--remove', action='store_true', help='Remove stanza files from --output-dir based on stdin list')
+    group.add_argument('-e', '--export', action='store_true', help='Export concatenated Packages files from --input-dir to stdout')
+    group.add_argument('-d', '--remove', action='store_true', help='Remove stanza files from --output-dir based on stdin list')
     group.add_argument('-c', '--copy', action='store_true', help='Copy stanza files from --input-dir to --output-dir based on stdin list')
-    parser.add_argument('-o', '--output-dir', default='debian_packages', help='Output directory for imported repo')
+    parser.add_argument('-o', '--output-dir', default='debian_packages', help='Output directory for imported repo, e.g. /debian/dists/trixie')
     parser.add_argument('-i', '--input-dir', help='Input directory for export operation')
     parser.add_argument('-s', '--comp', default='main,contrib', help='Repository components to analyze')
     parser.add_argument('-a', '--arch', default='binary-amd64,source', help='Architectures to analyze')
-    parser.add_argument('-d', '--dist', default='stable', help='Distributions to analyze')
     parser.add_argument('-g', '--log-level', default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
                        help='set the logging level (default: DEBUG)')    
     parser.add_argument('--log-file', help="save logs to file (default: stderr)")
@@ -145,33 +144,31 @@ def import_repository(args):
     base_url = args.import_repo.rstrip('/')
     components = args.comp.split(',')
     architectures = args.arch.split(',')
-    distributions = args.dist.split(',')
     
-    for dist in distributions:
-        for component in components:
-            for arch in architectures:
-                # Construct URL for Packages.gz or Sources.gz
-                url = f"{base_url}/dists/{dist}/{component}/{arch}/Packages.gz"
-                if arch == "source":
-                    url = f"{base_url}/dists/{dist}/{component}/{arch}/Sources.gz"
- 
-                logging.info(f"Processing: {url}")
+    for component in components:
+        for arch in architectures:
+            # Construct URL for Packages.gz or Sources.gz
+            url = f"{base_url}/{component}/{arch}/Packages.gz"
+            if arch == "source":
+                url = f"{base_url}/{component}/{arch}/Sources.gz"
 
-                # Download and process the metadata file
-                packages_gz_path = download_packages_gz(url)
-                if not packages_gz_path:
-                    logging.warning(f"Skipping {url} due to download error")
-                    continue
-                with gzip.open(packages_gz_path, 'rt') as f:
-                    packages = parse_packages(f)
+            logging.info(f"Processing: {url}")
+
+            # Download and process the metadata file
+            packages_gz_path = download_packages_gz(url)
+            if not packages_gz_path:
+                logging.warning(f"Skipping {url} due to download error")
+                continue
+            with gzip.open(packages_gz_path, 'rt') as f:
+                packages = parse_packages(f)
+            
+                output_dir = os.path.join(args.output_dir, dist, component, f"{arch}")
                 
-                    output_dir = os.path.join(args.output_dir, dist, component, f"{arch}")
-                    
-                    logging.info(f"Output directory: {output_dir}")
-                    remove_no_longer_exist(packages, output_dir)
-                    create_file_structure(packages, output_dir)
-                
-                os.unlink(packages_gz_path)
+                logging.info(f"Output directory: {output_dir}")
+                remove_no_longer_exist(packages, output_dir)
+                create_file_structure(packages, output_dir)
+            
+            os.unlink(packages_gz_path)
 
 def import_local(args):
     local_dir = args.import_local
@@ -231,16 +228,16 @@ def remove_packages(lines, output_dir):
     # Remove packages specified in input
     removed_count = 0
     for line in lines:
-        if not packages_dict.pop(tuple(line.split('=')), None):
-            logging.warning(f"Package not found for removal: {line}")
-        else:
-            removed_count += 1
+        if tuple(line.split('=')) in packages_dict:
+            del packages_dict[tuple(line.split('='))]
             logging.info(f"Marked package for removal: {line}")
+            removed_count += 1
+        else:
+            logging.warning(f"Package not found for removal: {line}")
             
     # Update the directory structure
     remove_no_longer_exist(list(packages_dict.values()), output_dir)
     logging.info(f"Removed {removed_count} packages")
-    print(list(packages_dict.values()))
 
 def copy_packages(package_names, input_dir, output_dir):
     logging.info(f"Copying packages from {input_dir} to {output_dir}")
@@ -267,8 +264,7 @@ def main():
         logging.info("Reading package names from stdin")
         for line in sys.stdin:
             if line[0] == "#" or line.strip() == "": continue
-            line_left_side = line.strip().split("=")[0]
-            lines.append(line_left_side)
+            lines.append(line.strip())
         logging.debug(f"Read {len(lines)} package names from stdin")
     
     if args.import_repo:
