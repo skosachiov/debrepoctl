@@ -276,7 +276,7 @@ def main():
             return
 
     print("Starting Debian metadata update...")
-    update_debian_metadata(base_url, local_base_dir)
+    update_debian_metadata(args.base_url, args.local_dir)
     print("Metadata update completed!")
 
 if __name__ == "__main__":
