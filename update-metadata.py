@@ -220,28 +220,28 @@ def update_debian_metadata(base_url, local_base_dir):
     print(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
     
     # Files to download for each distribution
-    metadata_files = [
-        "main/binary-amd64/Packages.gz",
-        "main/source/Sources.gz"
-    ]
+    components = ['main', 'contrib', 'non-free', 'non-free-firmware']
+    metadata_files = ["main/binary-amd64/Packages.gz", "main/source/Sources.gz"]
     
     for dist in distributions:
         print(f"\nProcessing distribution: {dist}")
         dist_url = urljoin(base_url, "dists/" + dist + "/")
         dist_dir = os.path.join(local_base_dir, "dists/" + dist)
         
-        for file_path in metadata_files:
-            # Download .gz file
-            remote_url = urljoin(dist_url, file_path)
-            local_gz_path = os.path.join(dist_dir, file_path)
-            
-            if download_file(remote_url, local_gz_path):
-                # Extract the .gz file
-                output_filename = os.path.basename(file_path).replace('.gz', '')
-                output_dir = os.path.dirname(local_gz_path)
-                output_path = os.path.join(output_dir, output_filename)
+        for component in components:
+            for file_path in metadata_files:
+                file_path = component + "/" + file_path
+                # Download .gz file
+                remote_url = urljoin(dist_url, file_path)
+                local_gz_path = os.path.join(dist_dir, file_path)
                 
-                extract_gz_file(local_gz_path, output_path)
+                if download_file(remote_url, local_gz_path):
+                    # Extract the .gz file
+                    output_filename = os.path.basename(file_path).replace('.gz', '')
+                    output_dir = os.path.dirname(local_gz_path)
+                    output_path = os.path.join(output_dir, output_filename)
+                    
+                    extract_gz_file(local_gz_path, output_path)
     
     with open(local_base_dir + "/status", "w") as f:
         f.write(str(time.time()))
