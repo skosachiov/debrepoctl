@@ -243,7 +243,7 @@ def update_debian_metadata(base_url, local_base_dir):
                 extract_gz_file(local_gz_path, output_path)
     
     with open(local_base_dir + "/status", "w") as f:
-        f.write(time.time())
+        f.write(str(time.time()))
 
 def main():
     """Main entry point"""
