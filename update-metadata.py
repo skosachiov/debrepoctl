@@ -203,7 +203,12 @@ def extract_gz_file(gz_path, output_path):
 
 def update_debian_metadata(base_url, local_base_dir):
     """Main function to update Debian repository metadata"""
-   
+
+    try:
+        os.remove(local_base_dir + "/status")
+    except Exception as e:
+        pass
+
     print("Fetching distributions list...")
     distributions = get_distributions(base_url + "/dists/")
     
@@ -236,6 +241,9 @@ def update_debian_metadata(base_url, local_base_dir):
                 output_path = os.path.join(output_dir, output_filename)
                 
                 extract_gz_file(local_gz_path, output_path)
+    
+    with open(local_base_dir + "/status", "w") as f:
+        f.write(time.time())
 
 def main():
     """Main entry point"""
@@ -243,7 +251,8 @@ def main():
     local_base_dir = "./debian_metadata"
     if not update_debian_metadata_if_newer(base_url, local_base_dir):
         print("Specific remote metadata files are older, no need to update")
-        return
+        if os.path.exists(local_base_dir + "/status"):
+            return
     print("Starting Debian metadata update...")
     update_debian_metadata(base_url, local_base_dir)
     print("Metadata update completed!")
