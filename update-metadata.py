@@ -6,6 +6,7 @@ from urllib.parse import urljoin
 from urllib.parse import urlparse
 from datetime import datetime
 import time
+import argparse
 
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
@@ -247,12 +248,33 @@ def update_debian_metadata(base_url, local_base_dir):
 
 def main():
     """Main entry point"""
-    base_url = "https://ftp.debian.org/debian/"
-    local_base_dir = "./debian_metadata"
-    if not update_debian_metadata_if_newer(base_url, local_base_dir):
+
+    parser = argparse.ArgumentParser(
+        description="Update Debian metadata files from the Debian repository"
+    )
+    parser.add_argument(
+        "--base-url",
+        default="https://ftp.debian.org/debian/",
+        help="Base URL for Debian metadata (default: %(default)s)"
+    )
+    parser.add_argument(
+        "--local-dir",
+        default="./metadata",
+        help="Local directory to store metadata files (default: %(default)s)"
+    )
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Force update even if remote files are older"
+    )
+    
+    args = parser.parse_args()
+
+    if not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
         print("Specific remote metadata files are older, no need to update")
-        if os.path.exists(local_base_dir + "/status"):
+        if os.path.exists(os.path.join(args.local_dir, "status")):
             return
+
     print("Starting Debian metadata update...")
     update_debian_metadata(base_url, local_base_dir)
     print("Metadata update completed!")
