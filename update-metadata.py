@@ -221,7 +221,7 @@ def update_debian_metadata(base_url, local_base_dir):
     
     # Files to download for each distribution
     components = ['main', 'contrib', 'non-free', 'non-free-firmware']
-    metadata_files = ["main/binary-amd64/Packages.gz", "main/source/Sources.gz"]
+    metadata_files = ["binary-amd64/Packages.gz", "source/Sources.gz"]
     
     for dist in distributions:
         print(f"\nProcessing distribution: {dist}")
