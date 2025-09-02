@@ -229,8 +229,8 @@ def update_debian_metadata(base_url, local_base_dir):
         dist_dir = os.path.join(local_base_dir, "dists/" + dist)
         
         for component in components:
-            for file_path in metadata_files:
-                file_path = component + "/" + file_path
+            for metadata_file in metadata_files:
+                file_path = component + "/" + metadata_file
                 # Download .gz file
                 remote_url = urljoin(dist_url, file_path)
                 local_gz_path = os.path.join(dist_dir, file_path)
@@ -277,7 +277,7 @@ def main():
 
     print("Starting Debian metadata update...")
     update_debian_metadata(args.base_url, args.local_dir)
-    print("Metadata update completed!")
+    print("\nMetadata update completed!")
 
 if __name__ == "__main__":
     main()
