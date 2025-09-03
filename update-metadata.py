@@ -203,7 +203,7 @@ def extract_gz_file(gz_path, output_path):
     except Exception as e:
         logging.error(f"Error extracting {gz_path}: {e}")
 
-def update_debian_metadata(base_url, local_base_dir):
+def update_debian_metadata(base_url, local_base_dir, components, architectures):
     """Main function to update Debian repository metadata"""
 
     try:
@@ -221,8 +221,12 @@ def update_debian_metadata(base_url, local_base_dir):
     logging.info(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
     
     # Files to download for each distribution
-    components = ['main', 'contrib', 'non-free', 'non-free-firmware']
-    metadata_files = ["binary-amd64/Packages.gz", "source/Sources.gz"]
+    metadata_files = []
+    for arch in architectures:
+        if arch == "source":
+            metadata_files.append(arch + "/Sources.gz")
+        else:
+            metadata_files.append(arch + "/Packages.gz")
     
     for dist in distributions:
         logging.info(f"Processing distribution: {dist}")
@@ -266,6 +270,18 @@ def main():
         help="Local directory to store metadata files (default: %(default)s)"
     )
     parser.add_argument(
+        "--comp",
+        default=['main'],
+        nargs='+',
+        help="Components main, contrib, non-free, non-free-firmware etc. (default: main)"
+    )
+    parser.add_argument(
+        "--arch",
+        default=['binary-amd64', 'source'],
+        nargs='+',
+        help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)"
+    )        
+    parser.add_argument(
         "--force",
         action="store_true",
         help="Force update even if remote files are older"
@@ -279,7 +295,7 @@ def main():
             return
 
     logging.info("Starting Debian metadata update...")
-    update_debian_metadata(args.base_url, args.local_dir)
+    update_debian_metadata(args.base_url, args.local_dir, args.comp, args.arch)
     logging.info("Metadata update completed!")
 
 if __name__ == "__main__":
