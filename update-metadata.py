@@ -7,6 +7,7 @@ from urllib.parse import urlparse
 from datetime import datetime
 import time
 import argparse
+import logging
 
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
@@ -52,7 +53,7 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                     remote_time = datetime.strptime(remote_time_str, '%a, %d %b %Y %H:%M:%S %Z').timestamp()
                     
                     if remote_time > local_mtime:
-                        print(f"Updating {url_path} (remote is newer)")
+                        logging.info(f"Updating {url_path} (remote is newer)")
                         # Download the updated file
                         file_response = requests.get(url)
                         file_response.raise_for_status()
@@ -72,18 +73,18 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                                         shutil.copyfileobj(f_in, f_out)
                                 # Set same modification time for extracted file
                                 os.utime(extract_path, (remote_time, remote_time))
-                                print(f"Extracted to {extract_path}")
+                                logging.info(f"Extracted to {extract_path}")
                             except Exception as e:
-                                print(f"Error extracting {local_path}: {e}")
+                                 logging.error(f"Error extracting {local_path}: {e}")
                         
                         updated = True
                     else:
-                        print(f"{url_path} is up to date")
+                        logging.info(f"{url_path} is up to date")
                 else:
-                    print(f"No last-modified header for {url}")
+                    logging.warning(f"No last-modified header for {url}")
             else:
                 # File doesn't exist locally, download it
-                print(f"Downloading new file: {url_path}")
+                logging.info(f"Downloading new file: {url_path}")
                 file_response = requests.get(url)
                 file_response.raise_for_status()
                 
@@ -106,14 +107,14 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                         # Set same modification time for extracted file
                         if 'last-modified' in file_response.headers:
                             os.utime(extract_path, (remote_time, remote_time))
-                        print(f"Extracted to {extract_path}")
+                        logging.info(f"Extracted to {extract_path}")
                     except Exception as e:
-                        print(f"Error extracting {local_path}: {e}")
+                        logging.error(f"Error extracting {local_path}: {e}")
                 
                 updated = True
                 
         except requests.RequestException as e:
-            print(f"Error processing {url}: {e}")
+            logging.error(f"Error processing {url}: {e}")
             continue
     
     return updated
@@ -138,7 +139,7 @@ def get_distributions(base_url):
         return distributions
     
     except requests.RequestException as e:
-        print(f"Error fetching distributions: {e}")
+        logging.error(f"Error fetching distributions: {e}")
         return []
 
 def should_download_file(local_path, remote_last_modified):
@@ -163,11 +164,11 @@ def download_file(url, local_path):
         
         last_modified = head_response.headers.get('last-modified')
         if not last_modified:
-            print(f"No last-modified header for {url}, forcing download")
+            logging.warning(f"No last-modified header for {url}, forcing download")
             last_modified = "Thu, 01 Jan 1970 00:00:00 GMT"  # Force download
         
         if should_download_file(local_path, last_modified):
-            print(f"Downloading: {url}")
+            logging.info(f"Downloading: {url}")
             response = requests.get(url)
             response.raise_for_status()
             
@@ -185,11 +186,11 @@ def download_file(url, local_path):
             
             return True
         else:
-            print(f"Skipping (up to date): {os.path.basename(local_path)}")
+            logging.info(f"Skipping (up to date): {os.path.basename(local_path)}")
             return False
             
     except requests.RequestException as e:
-        print(f"Error downloading {url}: {e}")
+        logging.error(f"Error downloading {url}: {e}")
         return False
 
 def extract_gz_file(gz_path, output_path):
@@ -198,9 +199,9 @@ def extract_gz_file(gz_path, output_path):
         with gzip.open(gz_path, 'rb') as f_in:
             with open(output_path, 'wb') as f_out:
                 shutil.copyfileobj(f_in, f_out)
-        print(f"Extracted: {os.path.basename(output_path)}")
+        logging.info(f"Extracted: {os.path.basename(output_path)}")
     except Exception as e:
-        print(f"Error extracting {gz_path}: {e}")
+        logging.error(f"Error extracting {gz_path}: {e}")
 
 def update_debian_metadata(base_url, local_base_dir):
     """Main function to update Debian repository metadata"""
@@ -209,22 +210,22 @@ def update_debian_metadata(base_url, local_base_dir):
         os.remove(local_base_dir + "/status")
     except Exception as e:
         pass
-
-    print("Fetching distributions list...")
+    
+    logging.info("Fetching distributions list...")
     distributions = get_distributions(base_url + "/dists/")
     
     if not distributions:
-        print("No distributions found!")
+        logging.error("No distributions found!")
         return
-    
-    print(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
+
+    logging.info(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
     
     # Files to download for each distribution
     components = ['main', 'contrib', 'non-free', 'non-free-firmware']
     metadata_files = ["binary-amd64/Packages.gz", "source/Sources.gz"]
     
     for dist in distributions:
-        print(f"\nProcessing distribution: {dist}")
+        logging.info(f"Processing distribution: {dist}")
         dist_url = urljoin(base_url, "dists/" + dist + "/")
         dist_dir = os.path.join(local_base_dir, "dists/" + dist)
         
@@ -249,6 +250,8 @@ def update_debian_metadata(base_url, local_base_dir):
 def main():
     """Main entry point"""
 
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
     parser = argparse.ArgumentParser(
         description="Update Debian metadata files from the Debian repository"
     )
@@ -271,13 +274,13 @@ def main():
     args = parser.parse_args()
 
     if not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
-        print("Specific remote metadata files are older, no need to update")
+        logging.info("Specific remote metadata files are older, no need to update")
         if os.path.exists(os.path.join(args.local_dir, "status")):
             return
 
-    print("Starting Debian metadata update...")
+    logging.info("Starting Debian metadata update...")
     update_debian_metadata(args.base_url, args.local_dir)
-    print("\nMetadata update completed!")
+    logging.info("Metadata update completed!")
 
 if __name__ == "__main__":
     main()
