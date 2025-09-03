@@ -253,8 +253,6 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
 def main():
     """Main entry point"""
 
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
-
     parser = argparse.ArgumentParser(
         description="Update Debian metadata files from the Debian repository"
     )
@@ -285,8 +283,14 @@ def main():
         action="store_true",
         help="Force update even if remote files are older"
     )
+    parser.add_argument(
+        '--log-level', default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
+        help='set the logging level (default: %(default)s)'
+    )    
     
     args = parser.parse_args()
+
+    logging.basicConfig(level=getattr(logging, args.log_level), format='%(asctime)s %(levelname)s %(message)s')
 
     if not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
         logging.info("Specific remote metadata files are older, no need to update")
