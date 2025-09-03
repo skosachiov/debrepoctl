@@ -18,7 +18,8 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
     """
     # Specific metadata files to check
     metadata_dirs = [
-        'db/references.db',
+        # 'db/references.db',
+        'db/release.caches.db',
         'indices/files/arch-amd64.files',
         'indices/files/components/source.list.gz'
     ]
