@@ -78,9 +78,9 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                             except Exception as e:
                                  logging.error(f"Error extracting {local_path}: {e}")
                         
-                        updated = True
                     else:
                         logging.info(f"{url_path} is up to date")
+                        updated = False
                 else:
                     logging.warning(f"No last-modified header for {url}")
             else:
@@ -111,8 +111,6 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                         logging.info(f"Extracted to {extract_path}")
                     except Exception as e:
                         logging.error(f"Error extracting {local_path}: {e}")
-                
-                updated = True
                 
         except requests.RequestException as e:
             logging.error(f"Error processing {url}: {e}")
