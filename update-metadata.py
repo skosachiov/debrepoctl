@@ -14,7 +14,7 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
     """
     Check if specific Debian metadata files are newer than local ones and update if needed.
     Builds local paths from URL structure.
-    Returns True if updated, False if no update needed.
+    Returns True if remote updated, False if no update needed.
     """
     # Specific metadata files to check
     metadata_dirs = [
@@ -27,7 +27,7 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
     # Base local directory
     os.makedirs(local_base_dir, exist_ok=True)
     
-    updated = False
+    updated = True
     
     for metadata_dir in metadata_dirs:
         url = base_url + metadata_dir
