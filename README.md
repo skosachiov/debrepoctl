@@ -47,11 +47,11 @@
 - Purpose: Supports `dose-*check` operations
 
 ### Snapshot Capability
-- Since the pool contents are only appended:
-  - `Sources.gz` and `Packages.gz` can serve as snapshots for any date
+Since the pool contents are only appended:
+`Sources.gz` and `Packages.gz` can serve as snapshots for any date
 
 ### Partial Build Recovery
-- If only some packages build successfully:
+If only some packages build successfully:
   1. In the working branch (e.g., `gnome49-backport`):
      - Perform `git revert`
      - Perform `git rebase`

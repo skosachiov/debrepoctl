@@ -179,7 +179,7 @@ def read_packages_dir(input_dir):
             lines.append(in_f.read())
             file_count += 1
     logging.info(f"Read {file_count} package files")
-    return "".join(lines).splitlines()
+    return "".join(lines)
 
 def remove_packages(lines, output_dir):
     logging.info(f"Removing packages from: {output_dir}")
