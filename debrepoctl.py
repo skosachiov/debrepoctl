@@ -142,11 +142,10 @@ def import_repository(args):
     logging.info(f"Starting repository import from: {args.import_url}")
 
     base_url = args.import_url.rstrip('/')
-    arch = args.arch
     
     # Construct URL for Packages.gz or Sources.gz
     url = f"{base_url}/Packages.gz"
-    if arch == "source":
+    if "/source/" in url:
         url = f"{base_url}/Sources.gz"
 
     logging.info(f"Processing: {url}")
