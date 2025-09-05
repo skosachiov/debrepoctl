@@ -45,7 +45,6 @@ def parse_packages(f):
     packages = []
     current_package = {}
     for line in f:
-        line = line.strip()
         if not line:
             # Empty line indicates end of current package stanza
             if current_package:
