@@ -100,12 +100,22 @@ git checkout -b gnome-backport
 
 ## export 
 
-`./debrepoctl.py -e -i /tmp/debian/dists/forky/main/source/  > forky_Sources`
+`./debrepoctl.py -e -i /tmp/debian/dists/forky/main/source/ > forky_Sources`
 
 ## get gnome backport list
 
 `grep-dctrl -n -s Package,Version,Section '' forky_Sources | tr -s "\n" | paste -d = - - - | grep '=gnome' | sed 's/=gnome//' > gnome.list`
 
-## 
+## backport
 
- cat gnome.list | ./debrepoctl.py -c -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/
+`cat gnome.list | ./debrepoctl.py -c -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/`
+
+```
+cd /tmp/debian/dists/trixie/main/source
+git add -A
+git commit -am "backport"
+```
+
+## git diff
+
+`git diff main --name-status`
