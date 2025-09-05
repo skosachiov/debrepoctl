@@ -6,6 +6,7 @@ import gzip
 import argparse
 from pathlib import Path
 import urllib.request
+import urllib.parse
 import shutil
 import tempfile
 import logging
@@ -13,14 +14,13 @@ import logging
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Debian Packages Analyzer')
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('-u', '--import-url', \
-        help='Import from Debian repository URL (e.g., https://ftp.debian.org/debian/dists/trixie/main/binary-amd64)')
-    group.add_argument('-l', '--import-local', help='Import from local directory containing Packages.gz files')
+    group.add_argument('-z', '--import-gz', \
+        help='Import from Debian repository FILE or URL (e.g., /tmp/Sources.gz or https://ftp.debian.org/debian/dists/trixie/main/binary-amd64/Packages.gz)')
     group.add_argument('-e', '--export', action='store_true', help='Export concatenated Packages files from --input-dir to stdout')
     group.add_argument('-r', '--remove', action='store_true', help='Remove stanza files from --output-dir based on stdin list')
     group.add_argument('-c', '--copy', action='store_true', help='Copy stanza files from --input-dir to --output-dir based on stdin list')
     parser.add_argument('-o', '--output-dir', default='debian_packages', \
-        help='Output directory for imported repo, (e.g. /debian/dists/trixie/main/source)')
+        help='Output directory for imported repo, (e.g. /debian/dists/trixie/main/binary-amd64 or /debian/dists/trixie/main/source)')
     parser.add_argument('-i', '--input-dir', help='Input directory for export operation')
     parser.add_argument('-g', '--log-level', default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
         help='set the logging level (default: DEBUG)')    
@@ -139,21 +139,24 @@ def remove_no_longer_exist(packages, output_dir):
     logging.info(f"Cleanup completed. Removed {removed_count} orphaned files.")
 
 def import_repository(args):
-    logging.info(f"Starting repository import from: {args.import_url}")
-
-    base_url = args.import_url.rstrip('/')
     
-    # Construct URL for Packages.gz or Sources.gz
-    url = f"{base_url}/Packages.gz"
-    if "/source/" in url:
-        url = f"{base_url}/Sources.gz"
+    logging.info(f"Starting repository import from: {args.import_gz}")
 
-    logging.info(f"Processing: {url}")
+    # Parse the source URL to determine the scheme
+    parsed = urllib.parse.urlparse(args.import_gz)
+    output_dir = args.output_dir
 
-    # Download and process the metadata file
-    packages_gz_path = download_packages_gz(url)
-    if not packages_gz_path:
-        logging.warning(f"Skipping {url} due to download error")
+    if parsed.scheme in ('http', 'https'):
+        # Handle HTTP/HTTPS URL
+        packages_gz_path = download_packages_gz(args.import_gz)
+        if not packages_gz_path:
+            logging.warning(f"Skipping {args.import_gz} due to download error")
+    elif not parsed.scheme or parsed.scheme == 'file':
+        packages_gz_path = args.import_gz
+        logging.info(f"Processing local file: {packages_gz_path}")
+    else:
+        raise ValueError(f"Unsupported URL scheme: {parsed.scheme}")
+
     with gzip.open(packages_gz_path, 'rt') as f:
         packages = parse_packages(f)
     
@@ -162,35 +165,8 @@ def import_repository(args):
         logging.info(f"Output directory: {output_dir}")
         remove_no_longer_exist(packages, output_dir)
         create_file_structure(packages, output_dir)
-    
-    os.unlink(packages_gz_path)
 
-def import_local(args):
-    local_dir = args.import_local
-    logging.info(f"Starting local import from: {local_dir}")
-    if not os.path.isdir(local_dir):
-        logging.error(f"Directory not found: {local_dir}")
-        return
-    
-    processed_count = 0
-    for root, _, files in os.walk(local_dir):
-        for file in files:
-            if file in ('Packages.gz', 'Sources.gz'):
-                packages_gz_path = os.path.join(root, file)
-                logging.info(f"Processing local file: {packages_gz_path}")
-                
-                with gzip.open(packages_gz_path, 'rt') as f:
-                    packages = parse_packages(f)
-                    
-                    rel_path = os.path.relpath(root, local_dir)
-                    output_dir = os.path.join(args.output_dir, rel_path)
-                    logging.info(f"Output directory: {output_dir}")
-
-                    remove_no_longer_exist(packages, output_dir)
-                    create_file_structure(packages, output_dir)
-                    processed_count += 1
-
-    logging.info(f"Local import completed. Processed {processed_count} files.")
+    if parsed.scheme in ('http', 'https'): os.unlink(packages_gz_path)
 
 def read_packages_dir(input_dir):
     logging.info(f"Reading package files from: {input_dir}")
@@ -262,10 +238,8 @@ def main():
             lines.append(line.strip())
         logging.debug(f"Read {len(lines)} package names from stdin")
     
-    if args.import_url:
+    if args.import_gz:
         import_repository(args)
-    elif args.import_local:
-        import_local(args)
     elif args.export:
         if not args.input_dir:
             print("Error: --input-dir is required for export operation")
