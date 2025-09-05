@@ -210,12 +210,33 @@ def remove_packages(lines, output_dir):
     remove_no_longer_exist(list(packages_dict.values()), output_dir)
     logging.info(f"Removed {removed_count} packages")
 
-def copy_packages(package_names, input_dir, output_dir):
+def copy_packages(lines, input_dir, output_dir):
     logging.info(f"Copying packages from {input_dir} to {output_dir}")
     if not os.path.exists(output_dir):
-        logging.error(f"No output directory: {output_dir}")
+        logging.warning(f"Output directory does not exist: {output_dir}")
         return
+    # Read existing packages
     packages = parse_packages(read_packages_dir(input_dir))
+    packages_dict = {}
+    # Create dictionary for easy lookup 
+    for p in packages:
+        if all(key in p for key in ('Package', 'Version')):
+            packages_dict[(p['Package'], p['Version'])] = p
+        else:
+            logging.warning(f"Skipping package without Package or Version field: {p}")
+    # Copy packages specified in input
+    packages = []
+    copy_count = 0
+    for line in lines:
+        if tuple(line.split('=')) in packages_dict:
+            packages.append(packages_dict[tuple(line.split('='))])
+            logging.info(f"Marked package for copy: {line}")
+            copy_count += 1
+        else:
+            logging.warning(f"Package not found for removal: {line}")
+            
+    # Update the directory structure
+    logging.info(f"Copied {copy_count} packages")
     create_file_structure(packages, output_dir)
 
 def main():
@@ -231,7 +252,7 @@ def main():
 
     lines = []
 
-    if any((args.remove, args.remove)):
+    if any((args.copy, args.remove)):
         logging.info("Reading package names from stdin")
         for line in sys.stdin:
             if line[0] == "#" or line.strip() == "": continue

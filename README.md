@@ -70,27 +70,42 @@ A       dists/trixie/main/binary-amd64/c/canna/libcanna1g_3.7p3-25_amd64.deb
 
 ## import 
 
-`debrepoctl --import-repo http://deb.debian.org/debian/ path/to/gitrepo`
-`debrepoctl --import-repo file:///path/to/debian/ path/to/gitrepo`
+```
+./debrepoctl.py --import-gz http://deb.debian.org/debian/dists/trixie/main/source/Sources.gz -o /tmp/debian/dists/trixie/main/source/
+./debrepoctl.py --import-gz http://deb.debian.org/debian/dists/forky/main/source/Sources.gz -o /tmp/debian/dists/forky/main/source/
+```
 
-`./debrepoctl.py --import-repo https://ftp.debian.org/debian/ --output-dir tests-out --distributions trixie`
+## git init
+
+```
+cd /tmp/debian/dists/trixie
+git init
+git add -A
+git commit -m "init"
+```
+
+```
+cd /tmp/debian/dists/forky
+git init
+git add -A
+git commit -m "init"
+```
+
+## git new branch
+
+```
+cd /tmp/debian/dists/trixie
+git checkout -b gnome-backport 
+```
 
 ## export 
 
-`debrepoctl --export-file path/to/gitrepo:branch Packages`
+`./debrepoctl.py -e -i /tmp/debian/dists/forky/main/source/  > forky_Sources`
 
-## main branch
+## get gnome backport list
 
-main branch sync 1h
+`grep-dctrl -n -s Package,Version,Section '' forky_Sources | tr -s "\n" | paste -d = - - - | grep '=gnome' | sed 's/=gnome//' > gnome.list`
 
-main branch - real repo
-branching
-commit
-commit
-push
-git diff main...HEAD
-git diff master --name-status
+## 
 
-## keep config
-
-folder .debrepoctl
+ cat gnome.list | ./debrepoctl.py -c -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/
