@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import gzip
 import shutil
@@ -253,40 +255,15 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
 def main():
     """Main entry point"""
 
-    parser = argparse.ArgumentParser(
-        description="Update Debian metadata files from the Debian repository"
-    )
-    parser.add_argument(
-        "--base-url",
-        default="https://ftp.debian.org/debian/",
-        help="Base URL for Debian metadata (default: %(default)s)"
-    )
-    parser.add_argument(
-        "--local-dir",
-        default="./metadata",
-        help="Local directory to store metadata files (default: %(default)s)"
-    )
-    parser.add_argument(
-        "--comp",
-        default=['main'],
-        nargs='+',
-        help="Components main, contrib, non-free, non-free-firmware etc. (default: main)"
-    )
-    parser.add_argument(
-        "--arch",
-        default=['binary-amd64', 'source'],
-        nargs='+',
-        help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)"
-    )        
-    parser.add_argument(
-        "--force",
-        action="store_true",
-        help="Force update even if remote files are older"
-    )
-    parser.add_argument(
-        '--log-level', default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
-        help='set the logging level (default: %(default)s)'
-    )    
+    parser = argparse.ArgumentParser(description="Update Debian metadata files from the Debian repository")
+    parser.add_argument("--base-url", default="https://ftp.debian.org/debian/", help="Base URL for Debian metadata (default: %(default)s)")
+    parser.add_argument("--local-dir", default="./metadata", help="Local directory to store metadata files (default: %(default)s)")
+    parser.add_argument("--comp", default=['main'], nargs='+', help="Components main, contrib, non-free, non-free-firmware etc. (default: main)")
+    parser.add_argument("--arch", default=['binary-amd64', 'source'], nargs='+', \
+        help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")        
+    parser.add_argument("--force", action="store_true", help="Force update even if remote files are older")
+    parser.add_argument("--log-level", default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
+        help='set the logging level (default: %(default)s)')    
     
     args = parser.parse_args()
 
