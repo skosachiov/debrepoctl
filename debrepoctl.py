@@ -10,6 +10,7 @@ import urllib.parse
 import shutil
 import tempfile
 import logging
+from io import StringIO
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Debian Packages Analyzer')
@@ -187,7 +188,7 @@ def remove_packages(lines, output_dir):
         logging.warning(f"Output directory does not exist: {output_dir}")
         return
     # Read existing packages
-    packages = parse_packages(read_packages_dir(output_dir))
+    packages = parse_packages(StringIO(read_packages_dir(output_dir)))
     packages_dict = {}
     # Create dictionary for easy lookup 
     for p in packages:
@@ -216,7 +217,7 @@ def copy_packages(lines, input_dir, output_dir):
         logging.warning(f"Output directory does not exist: {output_dir}")
         return
     # Read existing packages
-    packages = parse_packages(read_packages_dir(input_dir))
+    packages = parse_packages(StringIO(read_packages_dir(input_dir)))
     packages_dict = {}
     # Create dictionary for easy lookup 
     for p in packages:
@@ -233,7 +234,7 @@ def copy_packages(lines, input_dir, output_dir):
             logging.info(f"Marked package for copy: {line}")
             copy_count += 1
         else:
-            logging.warning(f"Package not found for removal: {line}")
+            logging.warning(f"Package not found for copying: {line}")
             
     # Update the directory structure
     logging.info(f"Copied {copy_count} packages")
