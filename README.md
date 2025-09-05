@@ -119,3 +119,9 @@ git commit -am "backport"
 ## git diff
 
 `git diff main --name-status`
+
+## remove packets
+
+`grep-dctrl -n -s Package,Version '' /tmp/trixie_Sources  | tr -s "\n" | paste -d = - - | grep 'gnome-shell-extension-' > gnome-rm.list`
+
+cat gnome-rm.list | ./debrepoctl.py -r -o /tmp/debian/dists/trixie/main/source/
