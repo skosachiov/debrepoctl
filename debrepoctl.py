@@ -45,13 +45,13 @@ def parse_packages(f):
     packages = []
     current_package = {}
     for line in f:
-        if not line:
+        if not line.strip():
             # Empty line indicates end of current package stanza
             if current_package:
                 packages.append(current_package)
                 current_package = {}
         else:
-            if ':' in line:
+            if ': ' in line:
                 # Key-value pair
                 key, value = line.split(':', 1)
                 current_package[key.strip()] = value.strip()
