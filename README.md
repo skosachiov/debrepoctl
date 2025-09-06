@@ -100,15 +100,25 @@ git checkout -b gnome-backport
 
 ## export 
 
-`./debrepoctl.py -e -i /tmp/debian/dists/forky/main/source/ > forky_Sources`
+`./debrepoctl.py -e -i /tmp/debian/dists/forky/main/source/ > /tmp/forky_Sources`
+`./debrepoctl.py -e -i /tmp/debian/dists/trixie/main/source/ > /tmp/trixie_Sources`
 
 ## get gnome backport list
 
-`grep-dctrl -n -s Package,Version,Section '' forky_Sources | tr -s "\n" | paste -d = - - - | grep '=gnome' | sed 's/=gnome//' > gnome.list`
+`grep-dctrl -n -s Package,Version,Section '' /tmp/trixie_Sources | tr -s "\n" | paste -d = - - - | grep '=gnome' | sed 's/=gnome//' > gnome.remove.list`
+
+`grep-dctrl -n -s Package,Version,Section '' /tmp/forky_Sources | tr -s "\n" | paste -d = - - - | grep '=gnome' | sed 's/=gnome//' > gnome.copy.list`
 
 ## backport
 
-`cat gnome.list | ./debrepoctl.py -c -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/`
+```
+cd /tmp/debian/dists/trixie
+git switch gnome-backport
+cd -
+```
+
+`cat gnome.remove.list | ./debrepoctl.py --remove -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/`
+`cat gnome.copy.list | ./debrepoctl.py --copy -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/`
 
 ```
 cd /tmp/debian/dists/trixie/main/source
