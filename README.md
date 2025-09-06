@@ -43,6 +43,7 @@ git checkout -b gnome-backport
 ## export 
 
 `./debrepoctl.py -e -i /tmp/debian/dists/forky/main/source/ > /tmp/forky_Sources`
+
 `./debrepoctl.py -e -i /tmp/debian/dists/trixie/main/source/ > /tmp/trixie_Sources`
 
 ## get gnome backport list
@@ -60,6 +61,7 @@ cd -
 ```
 
 `cat gnome.remove.list | ./debrepoctl.py --remove -o /tmp/debian/dists/trixie/main/source/`
+
 `cat gnome.copy.list | ./debrepoctl.py --copy -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/`
 
 ```
