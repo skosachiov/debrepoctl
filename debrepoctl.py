@@ -118,8 +118,6 @@ def remove_no_longer_exist(packages, output_dir):
         for filename in files:
             filepath = os.path.join(root, filename)
             rel_path = os.path.relpath(filepath, output_dir)
-            parts = Path(rel_path).parts
-            rel_path = str(Path(*parts[2:]))
             if rel_path not in expected_files:
                 try:
                     os.remove(filepath)
