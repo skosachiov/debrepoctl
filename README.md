@@ -1,72 +1,14 @@
 # GitOps-Style Package Repository Management
 
-## Tools
-- **debrepoctl**: Primary tool for repository management
+The system employs a GitOps-style approach for managing package repositories, using debrepoctl as the primary management tool. Its import functionality handles Sources.gz files by importing them into a directory tree structure organized by the Directory field, with individual files named in the PackageName_Version.dsc format and containing standard stanzas. These files act as manifests that can represent either the current unmodified state or a desired modified state of the repository. The Packages.gz import follows a similar structure, with filenames derived from the Filename field, and also serves as a manifest. To minimize load on the git filesystem, the contents of the pool directory are imported as a single file.
 
-## Import Functionality
-- **Sources.gz Import**:
-  - Imports into a directory tree structure based on the `Directory` field
-  - Filename format: `PackageName_Version.dsc`
-  - Contents: Standard stanza format
-  - Serves as a manifest describing either:
-    - Current state (unmodified)
-    - Desired state (modified)
+The workflow is built around a repository structure where different package repositories, such as Trixie or Sid, are automatically imported into separate Git repositories, each using the main branch. A key property of this system is that the main branch always accurately reflects the current state of the actual repository, with any modification by the runner acting as the trigger for an update.
 
-- **Packages.gz Import**:
-  - Similar structure to Sources.gz
-  - Filename derived from the `Filename` field
-  - Also functions as a manifest
+An administrator's workflow involves primarily working with the Sources tree. The process begins by creating a new branch from main (for example, gnome49-backport), making the necessary changes within this new branch, and then pushing those changes to Git. The runner then automatically compares this push branch against the main branch, applies the detected changes to the actual repository, calls debrepoctl to perform a re-import, and finally updates the main branch to match the new state.
 
-- **Pool Directory**:
-  - Imported as a single file to reduce gitfs load
+The system also includes export functionality, which converts these directory trees containing stanza files back into Sources.gz and Packages.gz files. This is particularly useful for supporting dose-*check operations. Furthermore, because the pool's contents are only ever appended to and never deleted, the Sources.gz and Packages.gz files can effectively serve as historical snapshots for any given date.
 
-## Workflow
-
-### Repository Structure
-- Package repositories (e.g., Trixie, Sid) are automatically imported into separate Git repositories
-- Each repository uses the `main` branch
-- Trigger: Repository modification by the runner
-- **Key Property**: `main` branch always reflects the current state of the actual repository
-
-### Administrator Workflow
-1. Administrator primarily works with the Sources tree
-2. Work process:
-   - Create a new branch from `main` (e.g., `gnome49-backport`)
-   - Make changes in the new branch
-   - Push changes to Git
-3. Runner actions:
-   - Compares the push branch (e.g., `gnome49-backport`) with `main`
-   - Applies changes to the actual repository
-   - Calls `debrepoctl` to re-import
-   - Updates `main` branch
-
-### Export Functionality
-- Converts directory trees with stanza files back to:
-  - `Sources.gz`
-  - `Packages.gz`
-- Purpose: Supports `dose-*check` operations
-
-### Snapshot Capability
-Since the pool contents are only appended:
-`Sources.gz` and `Packages.gz` can serve as snapshots for any date
-
-### Partial Build Recovery
-If only some packages build successfully:
-  1. In the working branch (e.g., `gnome49-backport`):
-     - Perform `git revert`
-     - Perform `git rebase`
-  2. This allows reattempting the operation
-
-## Example Git Diff Output
-```
-$ git diff master --name-status
-
-D       dists/trixie/main/binary-amd64/a/aiobafi6/python3-aiobafi6_0.9.0-2_all.deb
-A       dists/trixie/main/binary-amd64/c/canna/canna-utils_3.7p3-25_amd64.deb
-A       dists/trixie/main/binary-amd64/c/canna/canna_3.7p3-25_amd64.deb
-A       dists/trixie/main/binary-amd64/c/canna/libcanna1g-dev_3.7p3-25_amd64.deb
-A       dists/trixie/main/binary-amd64/c/canna/libcanna1g_3.7p3-25_amd64.deb
-```
+Finally, the model supports partial build recovery. If only some packages build successfully, the administrator can simply perform a git revert or git rebase in the working branch (e.g., gnome49-backport), which allows the operation to be easily reattempted.
 
 ## import 
 
@@ -109,7 +51,7 @@ git checkout -b gnome-backport
 
 `grep-dctrl -n -s Package,Version,Section '' /tmp/forky_Sources | tr -s "\n" | paste -d = - - - | grep '=gnome' | sed 's/=gnome//' > gnome.copy.list`
 
-## backport
+## backport (remove and copy)
 
 ```
 cd /tmp/debian/dists/trixie
@@ -117,21 +59,54 @@ git switch gnome-backport
 cd -
 ```
 
-`cat gnome.remove.list | ./debrepoctl.py --remove -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/`
+`cat gnome.remove.list | ./debrepoctl.py --remove -o /tmp/debian/dists/trixie/main/source/`
 `cat gnome.copy.list | ./debrepoctl.py --copy -i /tmp/debian/dists/forky/main/source/ -o /tmp/debian/dists/trixie/main/source/`
 
 ```
-cd /tmp/debian/dists/trixie/main/source
+cd /tmp/debian/dists/trixie/
 git add -A
 git commit -am "backport"
 ```
 
 ## git diff
 
-`git diff main --name-status`
+`git diff main --name-status --no-renames --`
 
-## remove packets
-
-`grep-dctrl -n -s Package,Version '' /tmp/trixie_Sources  | tr -s "\n" | paste -d = - - | grep 'gnome-shell-extension-' > gnome-rm.list`
-
-cat gnome-rm.list | ./debrepoctl.py -r -o /tmp/debian/dists/trixie/main/source/
+```
+D       main/source/a/almanah/almanah_0.12.4-1.dsc
+A       main/source/a/almanah/almanah_0.12.4-2.dsc
+D       main/source/e/eog-plugins/eog-plugins_44.1-3.dsc
+A       main/source/e/eog-plugins/eog-plugins_44.1-4.dsc
+D       main/source/e/eog/eog_47.0-1.dsc
+A       main/source/e/eog/eog_47.0-2.dsc
+D       main/source/e/epiphany-browser/epiphany-browser_48.3-2.dsc
+A       main/source/e/epiphany-browser/epiphany-browser_48.5-2.dsc
+D       main/source/e/evince/evince_48.1-3.dsc
+A       main/source/e/evince/evince_48.1-4.dsc
+D       main/source/e/evolution-data-server/evolution-data-server_3.56.1-2.dsc
+A       main/source/e/evolution-data-server/evolution-data-server_3.56.2-3.dsc
+D       main/source/e/evolution-ews/evolution-ews_3.56.1-1.dsc
+A       main/source/e/evolution-ews/evolution-ews_3.56.2-2.dsc
+D       main/source/e/evolution/evolution_3.56.1-1.dsc
+A       main/source/e/evolution/evolution_3.56.2-2.dsc
+D       main/source/g/gbonds/gbonds_2.0.3-17.dsc
+D       main/source/g/gcr/gcr_3.41.2-3.dsc
+A       main/source/g/gcr/gcr_3.41.2-4.dsc
+D       main/source/g/gdm3/gdm3_48.0-2.dsc
+A       main/source/g/gdm3/gdm3_48.0-3.dsc
+D       main/source/g/gnome-backgrounds/gnome-backgrounds_48.2.1-1.dsc
+A       main/source/g/gnome-backgrounds/gnome-backgrounds_49~beta-1.dsc
+A       main/source/g/gnome-control-center/gnome-control-center_1:48.4-1.dsc
+D       main/source/g/gnome-keyring/gnome-keyring_48.0-1.dsc
+A       main/source/g/gnome-keyring/gnome-keyring_48.0-3.dsc
+A       main/source/g/gnome-online-accounts/gnome-online-accounts_3.54.5-1.dsc
+D       main/source/g/gnome-settings-daemon/gnome-settings-daemon_48.1-1.dsc
+A       main/source/g/gnome-settings-daemon/gnome-settings-daemon_48.1-2.dsc
+D       main/source/g/gnome-shell-extensions/gnome-shell-extensions_48.2-1.dsc
+A       main/source/g/gnome-shell-extensions/gnome-shell-extensions_48.3-1.dsc
+A       main/source/g/gnome-shell/gnome-shell_48.4-1.dsc
+D       main/source/g/gnome-user-share/gnome-user-share_48.0-1.dsc
+A       main/source/g/gnome-user-share/gnome-user-share_48.1-1.dsc
+D       main/source/g/gnote/gnote_48.0-2.dsc
+A       main/source/g/gnote/gnote_48.1-1.dsc
+```
