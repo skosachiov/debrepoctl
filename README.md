@@ -112,3 +112,12 @@ A       main/source/g/gnome-user-share/gnome-user-share_48.1-1.dsc
 D       main/source/g/gnote/gnote_48.0-2.dsc
 A       main/source/g/gnote/gnote_48.1-1.dsc
 ```
+
+# update-metadata
+
+## grep-dctrl 
+
+```
+find metadata/ -name Packages -type f -exec sh -c 'echo {} | cut -f 3,4 -d\/; grep-dctrl -n -s Package,Version,Section -P "" {} \
+    | tr -s "\n" | paste -d = - - - | sed "s/^/    /" | grep -h " gnome-shell=" ' \;
+```
