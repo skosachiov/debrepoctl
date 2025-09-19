@@ -10,6 +10,7 @@ from datetime import datetime
 import time
 import argparse
 import logging
+import json
 
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
