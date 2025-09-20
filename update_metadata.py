@@ -70,7 +70,7 @@ def update_metadata_index(filename, data_dict):
                 if (pkg_name, version) not in packages:
                     if source == None: source = pkg_name
                     if source_version == None: source_version = version
-                    packages[(pkg_name, version)] = {'version': version, hashlib.md5('depends': ",".join(depends)), \
+                    packages[(pkg_name, version)] = {'version': version, 'depends': hashlib.md5(",".join(depends)), \
                         'source': source, 'source_version': source_version}
     logging.debug(f'In the file {filepath} processed packets: {len(packages)}')
     return packages
