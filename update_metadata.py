@@ -93,7 +93,7 @@ def write_metadata_index(filename, data_dict):
             for key, value in data_dict.items():
                 # Convert each value to JSON string without indentation
                 value_str = json.dumps(value, separators=(',', ':'))
-                items.append(f'  "{key_str}", {value_str}')
+                items.append(f'  "{key}": {value_str}')
             f.write(',\n'.join(items))
             f.write('\n}')
         print(f"Dictionary successfully written to {filename}")
