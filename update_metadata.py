@@ -53,7 +53,7 @@ def update_metadata_index(filename, data_dict):
                             logging.error(f'Duplicate stanza key: {key}: {value.strip()}')
                         pkg_name = value.strip()
                     # Build binary-to-source mapping for binary metadata if requested
-                    if key == 'Source' and bin_dict != None:
+                    if key == 'Source':
                         source_line = value.strip().split()
                         if len(source_line) > 0:
                             source = source_line[0]
