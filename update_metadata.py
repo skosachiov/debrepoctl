@@ -332,7 +332,7 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
                     
                     extract_gz_file(local_gz_path, output_path)
                     # Update index dict
-                    update_metadata_index(output_path, data_dict, dist, metadata_file.split("/"))
+                    update_metadata_index(output_path, data_dict, dist, metadata_file.split("/")[0])
     
     write_metadata_index(local_base_dir + "/index.json", data_dict)
 
