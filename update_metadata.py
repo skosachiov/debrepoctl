@@ -21,7 +21,7 @@ def read_metadata_index(filename):
     try:
         with open(filename, 'r', encoding='utf-8') as f:
             data_dict = json.load(f)
-        loggng.info(f"Dictionary successfully read from {filename}")
+        logging.info(f"Dictionary successfully read from {filename}")
         return data_dict
     except (IOError, json.JSONDecodeError) as e:
         logging.error(f"Error reading file: {e}")
