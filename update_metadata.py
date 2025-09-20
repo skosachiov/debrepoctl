@@ -13,6 +13,13 @@ import json
 import hashlib
 import re
 
+def md5_from_tuple(data_tuple):
+    """Generate MD5 hash from a tuple using JSON serialization"""
+    # Convert tuple to JSON string
+    json_str = json.dumps(data_tuple)
+    # Generate MD5 hash
+    md5_hash = hashlib.md5(json_str.encode('utf-8'))
+    return md5_hash.hexdigest()
 
 def read_metadata_index(filename):
     if not os.path.exists(filename):
@@ -68,12 +75,13 @@ def update_metadata_index(filename, data_dict, dist, comp, arch):
                             depends.append(p)
             # Store package metadata if valid
             if pkg_name != None:
-                if "=".join((dist, comp, arch, pkg_name, version)) not in packages:
+                if md5_from_tuple((pkg_name, version, dist, comp, arch)) not in packages:
                     if source == None: source = pkg_name
                     if source_version == None: source_version = version
-                    packages["=".join((dist, comp, arch, pkg_name, version))] = { \
-                        'deps': hashlib.md5(",".join(depends).encode()).hexdigest(), \
-                        'src': source, 'src_ver': source_version}
+                    packages[md5_from_tuple((pkg_name, version, dist, comp, arch))] = { \
+                        'pk': pkg_name, 'vr', version, 'di', dist, 'co', comp, 'ar', arch, \
+                        'de': hashlib.md5(",".join(depends).encode()).hexdigest()[:8], \
+                        'sr': source, 'sv': source_version}
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
     return packages
 
@@ -85,7 +93,7 @@ def write_metadata_index(filename, data_dict):
             for key, value in data_dict.items():
                 # Convert each value to JSON string without indentation
                 value_str = json.dumps(value, separators=(',', ':'))
-                items.append(f'  "{key}": {value_str}')
+                items.append(f'  "{key_str}", {value_str}')
             f.write(',\n'.join(items))
             f.write('\n}')
         print(f"Dictionary successfully written to {filename}")
