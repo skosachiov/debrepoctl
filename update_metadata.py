@@ -28,7 +28,7 @@ def read_metadata_index(filename):
 
 def update_metadata_index(filename, data_dict):
     packages = data_dict
-    with open(filepath, 'rt', encoding='utf-8') as f:
+    with open(filename, 'rt', encoding='utf-8') as f:
         content = f.read()
         # Split into individual package blocks
         package_blocks = re.split(r'\n\n+', content.strip())
