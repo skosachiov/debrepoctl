@@ -4,14 +4,84 @@ import os
 import gzip
 import shutil
 import requests
-from urllib.parse import urljoin
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from datetime import datetime
 import time
 import argparse
 import logging
 import json
+import hashlib
 
+
+def read_metadata_index(filename):
+    if not os.path.exists(filename):
+        logging.error(f"File {filename} does not exist")
+        return {}
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            data_dict = json.load(f)
+        loggng.info(f"Dictionary successfully read from {filename}")
+        return data_dict
+    except (IOError, json.JSONDecodeError) as e:
+        logging.error(f"Error reading file: {e}")
+        return {}
+
+def update_metadata_index(filename, data_dict):
+    packages = data_dict
+    with open(filepath, 'rt', encoding='utf-8') as f:
+        content = f.read()
+        # Split into individual package blocks
+        package_blocks = re.split(r'\n\n+', content.strip())
+        for block in package_blocks:
+            pkg_name = version = source = source_version = None
+            depends = []
+            block_list = []
+            for line in block.splitlines():
+                if len(block_list) > 0 and block_list[-1][-1] == ',' and line[0].isspace():
+                    block_list[-1] += line.rstrip()
+                else:
+                    if line:
+                        block_list.append(line.rstrip())
+            for line in block_list:
+                if not line or line[0].isspace(): continue
+                if ':' in line:
+                    key, value = line.split(':', 1)
+                    # Extract package name
+                    if key == 'Package':
+                        if pkg_name != None:
+                            logging.error(f'Duplicate stanza key: {key}: {value.strip()}')
+                        pkg_name = value.strip()
+                    # Build binary-to-source mapping for binary metadata if requested
+                    if key == 'Source' and bin_dict != None:
+                        source_line = value.strip().split()
+                        if len(source_line) > 0:
+                            source = source_line[0]
+                            if len(source_line) > 1: source_version = re.findall(r'\((.*?)\)', source_line[1])[0]
+                   # Extract version
+                    if key == 'Version':
+                        version = value.strip()
+                    # Collect dependencies
+                    if key in ('Build-Depends', 'Build-Depends-Indep', 'Build-Depends-Arch', 'Depends', 'Pre-Depends'):
+                        deps_pkgs = [p.strip().split()[0].split(":")[0] for p in value.split(',') if p.strip()]
+                        for p in deps_pkgs:
+                            depends.append(p)
+            # Store package metadata if valid
+            if pkg_name != None:
+                if (pkg_name, version) not in packages:
+                    if source == None: source = pkg_name
+                    if source_version == None: source_version = version
+                    packages[(pkg_name, version)] = {'version': version, hashlib.md5('depends': ",".join(depends)), \
+                        'source': source, 'source_version': source_version}
+    logging.debug(f'In the file {filepath} processed packets: {len(packages)}')
+    return packages
+
+def write_metadata_index(filename, data_dict):
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(data_dict, f, indent=4)
+        print(f"Dictionary successfully written to {filename}")
+    except IOError as e:
+        print(f"Error writing to file: {e}")
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
     """
@@ -222,6 +292,9 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
 
     logging.info(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
     
+    logging.info("Reading existing index...")
+    data_dict = read_metadata_index(local_base_dir + "/index.json")
+
     # Files to download for each distribution
     metadata_files = []
     for arch in architectures:
@@ -249,7 +322,11 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
                     output_path = os.path.join(output_dir, output_filename)
                     
                     extract_gz_file(local_gz_path, output_path)
+                    # Update index dict
+                    update_metadata_index(output_path, data_dict)
     
+    write_metadata_index(local_base_dir + "/index.json", data_dict)
+
     with open(local_base_dir + "/status", "w") as f:
         f.write(str(time.time()))
 
