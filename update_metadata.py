@@ -27,7 +27,7 @@ def read_metadata_index(filename):
         logging.error(f"Error reading file: {e}")
         return {}
 
-def update_metadata_index(filename, data_dict):
+def update_metadata_index(filename, data_dict, dist, arch):
     packages = data_dict
     with open(filename, 'rt', encoding='utf-8') as f:
         content = f.read()
@@ -68,12 +68,12 @@ def update_metadata_index(filename, data_dict):
                             depends.append(p)
             # Store package metadata if valid
             if pkg_name != None:
-                if pkg_name + "=" + version not in packages:
+                if "=".join(dist, arch, pkg_name, version) not in packages:
                     if source == None: source = pkg_name
                     if source_version == None: source_version = version
-                    packages[pkg_name + "=" + version] = {'package': pkg_name, 'version': version, \
-                        'depends': hashlib.md5(",".join(depends).encode()).hexdigest(), \
-                        'source': source, 'source_version': source_version}
+                    packages["=".join(dist, arch, pkg_name, version)] = { \
+                        'deps': hashlib.md5(",".join(depends).encode()).hexdigest(), \
+                        'src': source, 'src_ver': source_version}
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
     return packages
 
@@ -332,7 +332,7 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
                     
                     extract_gz_file(local_gz_path, output_path)
                     # Update index dict
-                    update_metadata_index(output_path, data_dict)
+                    update_metadata_index(output_path, data_dict, dist, arch)
     
     write_metadata_index(local_base_dir + "/index.json", data_dict)
 
