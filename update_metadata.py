@@ -68,10 +68,10 @@ def update_metadata_index(filename, data_dict, dist, arch):
                             depends.append(p)
             # Store package metadata if valid
             if pkg_name != None:
-                if "=".join(dist, arch, pkg_name, version) not in packages:
+                if "=".join((dist, arch, pkg_name, version)) not in packages:
                     if source == None: source = pkg_name
                     if source_version == None: source_version = version
-                    packages["=".join(dist, arch, pkg_name, version)] = { \
+                    packages["=".join((dist, arch, pkg_name, version))] = { \
                         'deps': hashlib.md5(",".join(depends).encode()).hexdigest(), \
                         'src': source, 'src_ver': source_version}
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
