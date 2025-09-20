@@ -79,7 +79,7 @@ def update_metadata_index(filename, data_dict, dist, comp, arch):
                     if source == None: source = pkg_name
                     if source_version == None: source_version = version
                     packages[md5_from_tuple((pkg_name, version, dist, comp, arch))] = { \
-                        'pk': pkg_name, 'vr', version, 'di', dist, 'co', comp, 'ar', arch, \
+                        'pk': pkg_name, 'vr':, version, 'di':, dist, 'co':, comp, 'ar':, arch, \
                         'de': hashlib.md5(",".join(depends).encode()).hexdigest()[:8], \
                         'sr': source, 'sv': source_version}
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
