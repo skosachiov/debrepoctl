@@ -11,6 +11,7 @@ import argparse
 import logging
 import json
 import hashlib
+import re
 
 
 def read_metadata_index(filename):
