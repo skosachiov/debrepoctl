@@ -80,7 +80,14 @@ def update_metadata_index(filename, data_dict):
 def write_metadata_index(filename, data_dict):
     try:
         with open(filename, 'w', encoding='utf-8') as f:
-            json.dump(data_dict, f, indent=4)
+            f.write('{\n')
+            items = []
+            for key, value in data_dict.items():
+                # Convert each value to JSON string without indentation
+                value_str = json.dumps(value, separators=(',', ':'))
+                items.append(f'  "{key}": {value_str}')
+            f.write(',\n'.join(items))
+            f.write('\n}')
         print(f"Dictionary successfully written to {filename}")
     except IOError as e:
         print(f"Error writing to file: {e}")
