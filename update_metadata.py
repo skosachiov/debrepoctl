@@ -21,13 +21,31 @@ def md5_from_tuple(data_tuple):
     md5_hash = hashlib.md5(json_str.encode('utf-8'))
     return md5_hash.hexdigest()
 
+def write_metadata_index(filename, data_dict):
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            f.write('[\n')  # Start with list bracket
+            items = []
+            for item in data_list.values():
+                # Convert each item to JSON string without indentation
+                item_str = json.dumps(item, separators=(',', ':'))
+                items.append(f'  {item_str}')
+            f.write(',\n'.join(items))
+            f.write('\n]')  # End with list bracket
+        logging.info(f"List successfully written to {filename}")
+    except IOError as e:
+        logging.error(f"Error writing to file: {e}")
+
 def read_metadata_index(filename):
     if not os.path.exists(filename):
         logging.error(f"File {filename} does not exist")
         return {}
+    data_dict = {}
     try:
         with open(filename, 'r', encoding='utf-8') as f:
-            data_dict = json.load(f)
+            data_list = json.load(f)
+        for e in data_list:
+            data_dict[md5_from_tuple((e["packet"], e['version'], e['dist'], e['comp'], e['arch']))] = e
         logging.info(f"Dictionary successfully read from {filename}")
         return data_dict
     except (IOError, json.JSONDecodeError) as e:
@@ -79,26 +97,11 @@ def update_metadata_index(filename, data_dict, dist, comp, arch):
                     if source == None: source = pkg_name
                     if source_version == None: source_version = version
                     packages[md5_from_tuple((pkg_name, version, dist, comp, arch))] = { \
-                        'pk': pkg_name, 'vr': version, 'di': dist, 'co': comp, 'ar': arch, \
-                        'de': hashlib.md5(",".join(depends).encode()).hexdigest()[:8], \
-                        'sr': source, 'sv': source_version}
+                        'package': pkg_name, 'version': version, 'dist': dist, 'comp': comp, 'arch': arch, \
+                        'depends': hashlib.md5(",".join(depends).encode()).hexdigest()[:8], \
+                        'source': source, 'source_version': source_version}
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
     return packages
-
-def write_metadata_index(filename, data_dict):
-    try:
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write('{\n')
-            items = []
-            for key, value in data_dict.items():
-                # Convert each value to JSON string without indentation
-                value_str = json.dumps(value, separators=(',', ':'))
-                items.append(f'  "{key}": {value_str}')
-            f.write(',\n'.join(items))
-            f.write('\n}')
-        print(f"Dictionary successfully written to {filename}")
-    except IOError as e:
-        print(f"Error writing to file: {e}")
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
     """
