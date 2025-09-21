@@ -1,17 +1,9 @@
 #!/usr/bin/env python3
 
-import os
-import gzip
-import shutil
-import requests
+import os, gzip, shutil, requests
+import time, argparse, logging, json, hashlib, re, apt_pkg, sys
 from urllib.parse import urljoin, urlparse
 from datetime import datetime
-import time
-import argparse
-import logging
-import json
-import hashlib
-import re
 
 def md5_from_tuple(data_tuple):
     """Generate MD5 hash from a tuple using JSON serialization"""
@@ -102,6 +94,93 @@ def update_metadata_index(filename, data_dict, dist, comp, arch):
                         'source': source, 'source_version': source_version}
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
     return packages
+
+def parse_requirement_line(line)
+    """
+    Parse a Debian requirement line into (package_name, operator, version)
+    Handles: =, >=, <=, >>, <<
+    """
+    line = line.strip()
+    if not line or line.endswith(')'):
+        return None
+    
+    # Handle cases with version constraints
+    if '(' in line and ')' in line:
+        package_part = line.split('(')[0].strip()
+        constraint_part = line.split('(')[1].split(')')[0].strip()
+        
+        # Parse constraint part - check for Debian operators
+        if constraint_part.startswith('= '):
+            version = constraint_part[2:].strip()
+            return (package_part, '=', version)
+        elif constraint_part.startswith('='):
+            version = constraint_part[1:].strip()
+            return (package_part, '=', version)
+        elif constraint_part.startswith('>='):
+            version = constraint_part[2:].strip()
+            return (package_part, '>=', version)
+        elif constraint_part.startswith('<='):
+            version = constraint_part[2:].strip()
+            return (package_part, '<=', version)
+        elif constraint_part.startswith('>>'):
+            version = constraint_part[2:].strip()
+            return (package_part, '>>', version)
+        elif constraint_part.startswith('<<'):
+            version = constraint_part[2:].strip()
+            return (package_part, '<<', version)
+    
+    return None
+
+def check_version(version, required_op, required_version):
+    """
+    Check if installed version satisfies the Debian requirement
+    """
+    comparison = apt_pkg.version_compare(version, required_version)
+    
+    if required_op == '=':
+        return comparison == 0
+    elif required_op == '>=':
+        return comparison >= 0
+    elif required_op == '<=':
+        return comparison <= 0
+    elif required_op == '>>':
+        return comparison > 0
+    elif required_op == '<<':
+        return comparison < 0
+    else:
+        return False
+
+def find_min_version(f, filename):
+
+    apt_pkg.init()
+
+    if not os.path.exists(filename):
+        logging.error(f"File {filename} does not exist")
+        return {}
+    data_dict = {}
+    try:
+        with open(filename, 'r', encoding='utf-8') as f:
+            data_list = json.load(f)
+        for e in data_list:
+            if e["package"] not in data_dict:
+                data_dict[e["package"]] = [e]
+            else:
+                data_dict[e["package"]].append(e)
+    except (IOError, json.JSONDecodeError) as e:
+        logging.error(f"Error reading file: {e}")
+        return {}
+    logging.info(f"Dictionary successfully read from {filename}")
+    for v in data_dict.values():
+        v.sort(lambda x: apt_pkg.version_compare(x['version'], '0'))
+    
+    for line in f:
+        if not requirement:
+            continue
+        package_name, operator, required_version = parse_requirement_line(line)
+ 
+        for p in data_dict[package_name]:
+            if check_version(p['version'], operator, required_version):
+                print(p)
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
     """
@@ -360,12 +439,17 @@ def main():
     parser.add_argument("--arch", default=['binary-amd64', 'source'], nargs='+', \
         help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")        
     parser.add_argument("--force", action="store_true", help="Force update even if remote files are older")
+    parser.add_argument("--find", action="store_true", help="Read stdin and find a minimum version index packages that satisfies the conditions, format: libpython3.13 (>= 3.13.0~rc3)")
     parser.add_argument("--log-level", default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
         help='set the logging level (default: %(default)s)')    
     
     args = parser.parse_args()
 
     logging.basicConfig(level=getattr(logging, args.log_level), format='%(asctime)s %(levelname)s %(message)s')
+
+    if args.find != None:
+        find_min_version(sys.stdin, args.local_dir + "/index.json")
+        return
 
     if not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
         logging.info("Specific remote metadata files are older, no need to update")
