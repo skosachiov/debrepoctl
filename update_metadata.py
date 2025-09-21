@@ -187,7 +187,7 @@ def find_min_version(fin, filename):
         return {}
     logging.info(f"Dictionary successfully read from {filename}")
     for key in data_dict:
-        data_dict[key].sort(key = cmp_to_key(apt_pkg.version_compare))
+        data_dict[key].sort(key = cmp_to_key(lambda a,b: -apt_pkg.version_compare(a, b)))
     
     for line in fin:
         req = parse_requirement_line(line)
