@@ -169,8 +169,6 @@ def check_version(version, required_op, required_version):
 
 def find_min_version(fin, filename):
 
-    apt_pkg.init()
-
     if not os.path.exists(filename):
         logging.error(f"File {filename} does not exist")
         return {}
@@ -192,8 +190,6 @@ def find_min_version(fin, filename):
     
     for line in fin:
         req = parse_requirement_line(line)
-        print(line)
-        print(req)
         if not req:
             continue
         package_name, operator, required_version = req
@@ -467,6 +463,8 @@ def main():
     args = parser.parse_args()
 
     logging.basicConfig(level=getattr(logging, args.log_level), format='%(asctime)s %(levelname)s %(message)s')
+
+    apt_pkg.init()
 
     if args.find != None:
         find_min_version(sys.stdin, args.local_dir + "/index.json")
