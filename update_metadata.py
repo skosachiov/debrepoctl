@@ -95,7 +95,7 @@ def update_metadata_index(filename, data_dict, dist, comp, arch):
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
     return packages
 
-def parse_requirement_line(line)
+def parse_requirement_line(line):
     """
     Parse a Debian requirement line into (package_name, operator, version)
     Handles: =, >=, <=, >>, <<
