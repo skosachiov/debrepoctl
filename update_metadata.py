@@ -174,7 +174,7 @@ def find_min_version(fin, filename):
         v.sort(key = lambda x: apt_pkg.version_compare(x['version'], '0'))
     
     for line in fin:
-        if not requirement:
+        if not line.strip():
             continue
         package_name, operator, required_version = parse_requirement_line(line)
  
