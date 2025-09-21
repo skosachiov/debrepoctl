@@ -179,6 +179,7 @@ def find_min_version(fin, filename):
             continue
         package_name, operator, required_version = req
  
+        print(data_dict[package_name])
         for p in data_dict[package_name]:
             if check_version(p['version'], operator, required_version):
                 print(p)
