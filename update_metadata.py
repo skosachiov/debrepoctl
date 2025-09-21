@@ -45,7 +45,7 @@ def read_metadata_index(filename):
         with open(filename, 'r', encoding='utf-8') as f:
             data_list = json.load(f)
         for e in data_list:
-            data_dict[md5_from_tuple((e["packet"], e['version'], e['dist'], e['comp'], e['arch']))] = e
+            data_dict[md5_from_tuple((e["package"], e['version'], e['dist'], e['comp'], e['arch']))] = e
         logging.info(f"Dictionary successfully read from {filename}")
         return data_dict
     except (IOError, json.JSONDecodeError) as e:
