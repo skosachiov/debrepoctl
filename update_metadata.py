@@ -4,6 +4,7 @@ import os, gzip, shutil, requests
 import time, argparse, logging, json, hashlib, re, apt_pkg, sys
 from urllib.parse import urljoin, urlparse
 from datetime import datetime
+from functools import cmp_to_key
 
 def md5_from_tuple(data_tuple):
     """Generate MD5 hash from a tuple using JSON serialization"""
@@ -186,7 +187,7 @@ def find_min_version(fin, filename):
         return {}
     logging.info(f"Dictionary successfully read from {filename}")
     for key in data_dict:
-        data_dict[key].sort(key = lambda x: apt_pkg.version_compare(x['version'], '0'))
+        data_dict[key].sort(key = cmp_to_key(apt_pkg.version_compare))
     
     for line in fin:
         req = parse_requirement_line(line)
