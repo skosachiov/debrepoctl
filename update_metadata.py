@@ -98,36 +98,53 @@ def update_metadata_index(filename, data_dict, dist, comp, arch):
 def parse_requirement_line(line):
     """
     Parse a Debian requirement line into (package_name, operator, version)
-    Handles: =, >=, <=, >>, <<
+    Handles: =, >=, <=, >>, << and various edge cases
     """
     line = line.strip()
-    if not line or line.endswith(')'):
+    if not line:
         return None
     
-    # Handle cases with version constraints
+    # Handle lines with trailing comments or other characters
+    line = line.split('#')[0].strip()  # Remove comments
+    if not line:
+        return None
+    
+    # Use regex for more robust parsing
+    pattern = r'^([a-zA-Z0-9\-\._\+]+)\s*\(\s*([=><]+)\s*([^\)]+)\s*\)$'
+    match = re.match(pattern, line)
+    
+    if match:
+        package_part = match.group(1).strip()
+        operator = match.group(2).strip()
+        version = match.group(3).strip()
+        
+        # Handle operators with multiple characters
+        if operator == '>>':
+            return (package_part, '>>', version)
+        elif operator == '<<':
+            return (package_part, '<<', version)
+        elif operator == '>=':
+            return (package_part, '>=', version)
+        elif operator == '<=':
+            return (package_part, '<=', version)
+        elif operator == '=':
+            return (package_part, '=', version)
+    
+    # Alternative parsing for edge cases
     if '(' in line and ')' in line:
+        # Extract content between parentheses
         package_part = line.split('(')[0].strip()
         constraint_part = line.split('(')[1].split(')')[0].strip()
         
-        # Parse constraint part - check for Debian operators
-        if constraint_part.startswith('= '):
-            version = constraint_part[2:].strip()
-            return (package_part, '=', version)
-        elif constraint_part.startswith('='):
-            version = constraint_part[1:].strip()
-            return (package_part, '=', version)
-        elif constraint_part.startswith('>='):
-            version = constraint_part[2:].strip()
-            return (package_part, '>=', version)
-        elif constraint_part.startswith('<='):
-            version = constraint_part[2:].strip()
-            return (package_part, '<=', version)
-        elif constraint_part.startswith('>>'):
-            version = constraint_part[2:].strip()
-            return (package_part, '>>', version)
-        elif constraint_part.startswith('<<'):
-            version = constraint_part[2:].strip()
-            return (package_part, '<<', version)
+        # Handle operators with spaces
+        operators = ['>=', '<=', '>>', '<<', '=']
+        for op in operators:
+            if constraint_part.startswith(op):
+                version = constraint_part[len(op):].strip()
+                # Handle cases where operator might have a space after it
+                if version.startswith(' '):
+                    version = version[1:].strip()
+                return (package_part, op, version)
     
     return None
 
