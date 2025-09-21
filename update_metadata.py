@@ -26,7 +26,7 @@ def write_metadata_index(filename, data_dict):
         with open(filename, 'w', encoding='utf-8') as f:
             f.write('[\n')  # Start with list bracket
             items = []
-            for item in data_list.values():
+            for item in data_dict.values():
                 # Convert each item to JSON string without indentation
                 item_str = json.dumps(item, separators=(',', ':'))
                 items.append(f'  {item_str}')
