@@ -175,6 +175,7 @@ def find_min_version(fin, filename):
     
     for line in fin:
         req = parse_requirement_line(line)
+        print(line)
         print(req)
         if not req:
             continue
