@@ -113,7 +113,7 @@ D       main/source/g/gnote/gnote_48.0-2.dsc
 A       main/source/g/gnote/gnote_48.1-1.dsc
 ```
 
-# update-metadata
+# distrotracker
 
 ## grep-dctrl 
 
