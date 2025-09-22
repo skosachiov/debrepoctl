@@ -468,9 +468,7 @@ def main():
 
     if args.find != None:
         find_min_version(sys.stdin, args.local_dir + "/index.json")
-        return
-
-    if not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
+    elif not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
         logging.info("Specific remote metadata files are older, no need to update")
         if os.path.exists(os.path.join(args.local_dir, "status")):
             return
