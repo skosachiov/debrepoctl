@@ -127,6 +127,14 @@ or
 
 `cat dose-unsat.list | ./distrotracker.sh --find`
 
+or
+
+```
+cat dose-unsat.list | ./distrotracker.sh --find --arch binary-amd64
+cat dose-unsat.list | ./distrotracker.sh --find --arch source
+cat dose-unsat.list | ./distrotracker.sh --find --arch binary-amd64 binary-arm64
+```
+
 ## simple search with grep-dctrl 
 
 ```

@@ -130,6 +130,10 @@ def parse_requirement_line(line):
             return (package_part, '<=', version)
         elif operator == '=':
             return (package_part, '=', version)
+    else:
+        package_part = line.strip()
+        operator = '>='
+        version = '0'
     
     # Alternative parsing for edge cases
     if '(' in line and ')' in line:
