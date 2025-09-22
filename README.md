@@ -115,7 +115,19 @@ A       main/source/g/gnote/gnote_48.1-1.dsc
 
 # distrotracker
 
-## grep-dctrl 
+## update metadata
+
+`./distrotracker.sh --base-url http://deb.debian.org/debian/`
+
+## find
+
+`echo 'libpython3.13 (>= 3.13.0~rc3)' | ./distrotracker.sh --find`
+
+or
+
+`cat dose-unsat.list | ./distrotracker.sh --find`
+
+## simple search with grep-dctrl 
 
 ```
 find metadata/ -name Packages -type f -exec sh -c 'echo {} | cut -f 3,4 -d\/; grep-dctrl -n -s Package,Version,Section -P "" {} \
