@@ -168,7 +168,7 @@ def check_version(version, required_op, required_version):
     else:
         return False
 
-def find_min_version(fin, filename):
+def find_min_version(fin, filename, arch = None):
 
     if not os.path.exists(filename):
         logging.error(f"File {filename} does not exist")
@@ -197,6 +197,8 @@ def find_min_version(fin, filename):
  
         for p in data_dict[package_name]:
             if check_version(p['version'], operator, required_version):
+                if arch and p[arch] not in arch:
+                    continue
                 print(p)
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
@@ -467,7 +469,7 @@ def main():
     apt_pkg.init()
 
     if args.find:
-        find_min_version(sys.stdin, args.local_dir + "/index.json")
+        find_min_version(sys.stdin, args.local_dir + "/index.json", args.arch)
         return
     elif not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
         logging.info("Specific remote metadata files are older, no need to update")
