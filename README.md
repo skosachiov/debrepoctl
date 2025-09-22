@@ -119,7 +119,7 @@ A       main/source/g/gnote/gnote_48.1-1.dsc
 
 `./distrotracker.sh --base-url http://deb.debian.org/debian/`
 
-## find
+## search for the minimum version that satisfies dependencies
 
 `echo 'libpython3.13 (>= 3.13.0~rc3)' | ./distrotracker.sh --find`
 
