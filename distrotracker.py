@@ -197,7 +197,7 @@ def find_min_version(fin, filename, arch = None):
  
         for p in data_dict[package_name]:
             if check_version(p['version'], operator, required_version):
-                if arch and p[arch] not in arch:
+                if arch and p['arch'] not in arch:
                     continue
                 print(p)
 
