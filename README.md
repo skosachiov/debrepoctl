@@ -127,7 +127,14 @@ or
 
 `cat dose-unsat.list | ./distrotracker.sh --find`
 
-or
+or dose-unsat.list example:
+```
+libx509-ocaml-dev (>= 1.0.0)
+libduration-ocaml-dev
+librust-gix-fs-0.12+default-dev (>= 0.12.1-~~)
+libkdf-ocaml-dev-gjix7
+librandomconv-ocaml-dev (>= 0.2)
+```
 
 ```
 cat dose-unsat.list | ./distrotracker.sh --find --arch binary-amd64
