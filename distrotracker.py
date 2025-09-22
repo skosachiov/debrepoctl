@@ -195,6 +195,9 @@ def find_min_version(fin, filename, arch = None):
             continue
         package_name, operator, required_version = req
  
+        if package_name not in data_dict:
+            logging.warning(f"Can not find package name {package_name}")
+            continue
         for p in data_dict[package_name]:
             if check_version(p['version'], operator, required_version):
                 if arch and p['arch'] not in arch:
