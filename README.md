@@ -148,11 +148,3 @@ cat dose-unsat.list | ./distrotracker.sh --find --arch binary-amd64 binary-arm64
 find metadata/ -name Packages -type f -exec sh -c 'echo {} | cut -f 3,4 -d\/; grep-dctrl -n -s Package,Version,Section -P "" {} \
     | tr -s "\n" | paste -d = - - - | sed "s/^/    /" | grep -h " gnome-shell=" ' \;
 ```
-
-## concat 
-
-`find metadata/ -type f -name "Packages" -exec cat {} \; > pull_Packages`
-`find metadata/ -type f -name "Sources" -exec cat {} \; > pull_Sources`
-
-`echo "" | ../wanna-debian/pre-dose.sh --log-file /dev/null --remove pull_Packages > top_pool_Packages`
-`echo "" | ../wanna-debian/pre-dose.sh --log-file /dev/null --remove pull_Sources > top_pool_Sources`
