@@ -196,7 +196,6 @@ def find_min_version(fin, filename, arch = None, briefly = None):
         data_dict[key].sort(key=cmp_to_key(lambda a, b: apt_pkg.version_compare(a["version"], b["version"])))
 
     briefly_keys = ['package', 'version', 'dist', 'arch']
-    print("[")
     items = []
     for line in fin:
         req = parse_requirement_line(line)
@@ -214,6 +213,8 @@ def find_min_version(fin, filename, arch = None, briefly = None):
                     continue
                 item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
                 items.append(f'  {item_str}')
+                
+    print("[")                
     print(',\n'.join(items))
     print("]")
 
