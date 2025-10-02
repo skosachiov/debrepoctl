@@ -492,12 +492,17 @@ def main():
         help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")
     parser.add_argument("--force", action="store_true", help="Force update even if remote files are older")
     parser.add_argument("--hold", action="store_true", help="Do not attempt to update metadata")
-    parser.add_argument("--find", action="store_true", help="Read stdin and find a minimum version index packages that satisfies the conditions, example: libpython3.13 (>= 3.13.0~rc3)")
+    parser.add_argument("--find", action="store_true", \
+        help="Read stdin and find a minimum version index packages that satisfies the conditions, \
+        example: libpython3.13 (>= 3.13.0~rc3)")
     parser.add_argument("--briefly", action="store_true", help="Display only basic fields")
     parser.add_argument("--log-level", default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
-        help='set the logging level (default: %(default)s)')    
+        help='Set the logging level (default: %(default)s)')    
     
     args = parser.parse_args()
+    if not args.base_url:
+        with open(local_base_dir + "/status", "r") as f:
+            args.base_url = json.load(f).base_url    
     if not args.base_url.endswith("/"):
         args.base_url += "/"
     if not args.dist:
@@ -508,14 +513,11 @@ def main():
     apt_pkg.init()
 
     if not args.hold:
-        if not args.base_url:
-            with open(local_base_dir + "/status", "r") as f:
-                args.base_url = json.load(f).base_url
         if update_debian_metadata_if_newer(args.base_url, args.local_dir) or args.force or \
-            not os.path.exists(os.path.join(args.local_dir, "status")):
-                logging.info("Starting metadata update...")
-                update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
-                logging.info("Metadata update completed!")
+                not os.path.exists(os.path.join(args.local_dir, "status")):
+            logging.info("Starting metadata update...")
+            update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
+            logging.info("Metadata update completed!")
     if args.find:
         find_min_version(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly)
 
