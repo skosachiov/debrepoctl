@@ -500,13 +500,14 @@ def main():
         help='Set the logging level (default: %(default)s)')    
     
     args = parser.parse_args()
-    
+
     if not args.base_url:
         try:
             with open(args.local_dir + "/status", "r") as f:
                 args.base_url = json.load(f)['base_url']
         except FileNotFoundError:
             logging.error("Status file missing, base url required")
+            return
     if not args.base_url.endswith("/"):
         args.base_url += "/"
     if not args.dist:
