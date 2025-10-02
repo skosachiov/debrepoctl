@@ -6,6 +6,7 @@ from urllib.parse import urljoin, urlparse
 from datetime import datetime
 from functools import cmp_to_key
 
+
 def md5_from_tuple(data_tuple):
     """Generate MD5 hash from a tuple using JSON serialization"""
     # Convert tuple to JSON string
@@ -173,7 +174,7 @@ def check_version(version, required_op, required_version):
     else:
         return False
 
-def find_min_version(fin, filename, arch = None):
+def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
 
     if not os.path.exists(filename):
         logging.error(f"File {filename} does not exist")
@@ -193,7 +194,8 @@ def find_min_version(fin, filename, arch = None):
     logging.info(f"Dictionary successfully read from {filename}")
     for key in data_dict:
         data_dict[key].sort(key=cmp_to_key(lambda a, b: apt_pkg.version_compare(a["version"], b["version"])))
-    
+
+    briefly_keys = ['package', 'version', 'dist', 'arch']
     for line in fin:
         req = parse_requirement_line(line)
         if not req:
@@ -207,7 +209,12 @@ def find_min_version(fin, filename, arch = None):
             if check_version(p['version'], operator, required_version):
                 if arch and p['arch'] not in arch:
                     continue
-                print(p)
+                if dist and p['dist'] not in dist:
+                    continue
+                if briefly:
+                    print({k: v for k, v in p.items() if k not in briefly_keys})
+                else:
+                    print(p)
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
     """
@@ -467,6 +474,7 @@ def main():
         help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")        
     parser.add_argument("--force", action="store_true", help="Force update even if remote files are older")
     parser.add_argument("--find", action="store_true", help="Read stdin and find a minimum version index packages that satisfies the conditions, example: libpython3.13 (>= 3.13.0~rc3)")
+    parser.add_argument("--briefly", action="store_true", help="Display only basic fields")
     parser.add_argument("--log-level", default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
         help='set the logging level (default: %(default)s)')    
     
@@ -479,7 +487,7 @@ def main():
     apt_pkg.init()
 
     if args.find:
-        find_min_version(sys.stdin, args.local_dir + "/index.json", args.arch)
+        find_min_version(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, arch.briefly)
         return
     elif not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
         logging.info("Specific remote metadata files are older, no need to update")
