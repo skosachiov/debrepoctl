@@ -139,8 +139,17 @@ librandomconv-ocaml-dev (>= 0.2)
 ```
 cat dose-unsat.list | ./distrotracker.sh --find --arch binary-amd64
 cat dose-unsat.list | ./distrotracker.sh --find --arch source
-cat dose-unsat.list | ./distrotracker.sh --find --arch binary-amd64 binary-arm64
+cat dose-unsat.list | ./distrotracker.sh --find --arch binary-amd64 binary-arm64 --dist trixie sid
 ```
+
+or backport.list example:
+```
+libx509-ocaml-dev=1.0.0
+librust-gix-fs-0.12+default-dev=0.12.1
+librandomconv-ocaml-dev=0.2
+```
+
+`cat backport.list | sed 's/=/ (>= /;s/$/)/' | ./distrotracker.sh --find --briefly`
 
 ## simple search with grep-dctrl 
 
