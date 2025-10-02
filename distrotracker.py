@@ -478,19 +478,20 @@ def update_debian_metadata(base_url, local_base_dir, dists, components, architec
     write_metadata_index(local_base_dir + "/index.json", data_dict)
 
     with open(local_base_dir + "/status", "w") as f:
-        f.write(str(time.time()))
+        json.dump({'base_url': base_url, 'timestamp': str(time.time())}, f) 
 
 def main():
     """Main entry point"""
 
     parser = argparse.ArgumentParser(description="Update Debian metadata files from the Debian repository")
-    parser.add_argument("--base-url", default="https://ftp.debian.org/debian/", help="Base URL for Debian metadata (default: %(default)s)")
+    parser.add_argument("--base-url", help="Base URL for Debian metadata (example: https://ftp.debian.org/debian/)")
     parser.add_argument("--local-dir", default="./metadata", help="Local directory to store metadata files (default: %(default)s)")
     parser.add_argument("--dist", default=[], nargs='+', help="Distributions (default: all)")    
     parser.add_argument("--comp", default=['main'], nargs='+', help="Components main, contrib, non-free, non-free-firmware etc. (default: main)")
     parser.add_argument("--arch", default=['binary-amd64', 'source'], nargs='+', \
         help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")
     parser.add_argument("--force", action="store_true", help="Force update even if remote files are older")
+    parser.add_argument("--hold", action="store_true", help="Do not attempt to update metadata")
     parser.add_argument("--find", action="store_true", help="Read stdin and find a minimum version index packages that satisfies the conditions, example: libpython3.13 (>= 3.13.0~rc3)")
     parser.add_argument("--briefly", action="store_true", help="Display only basic fields")
     parser.add_argument("--log-level", default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
@@ -506,17 +507,18 @@ def main():
 
     apt_pkg.init()
 
+    if not args.hold:
+        if not args.base_url:
+            with open(local_base_dir + "/status", "r") as f:
+                args.base_url = json.load(f).base_url
+        if update_debian_metadata_if_newer(args.base_url, args.local_dir) or args.force or \
+            not os.path.exists(os.path.join(args.local_dir, "status"))
+                logging.info("Starting metadata update...")
+                update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
+                logging.info("Metadata update completed!")
     if args.find:
         find_min_version(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly)
-        return
-    elif not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
-        logging.info("Specific remote metadata files are older, no need to update")
-        if os.path.exists(os.path.join(args.local_dir, "status")):
-            return
 
-    logging.info("Starting Debian metadata update...")
-    update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
-    logging.info("Metadata update completed!")
 
 if __name__ == "__main__":
     main()
