@@ -414,7 +414,7 @@ def extract_gz_file(gz_path, output_path):
     except Exception as e:
         logging.error(f"Error extracting {gz_path}: {e}")
 
-def update_debian_metadata(base_url, local_base_dir, components, architectures):
+def update_debian_metadata(base_url, local_base_dir, dists, components, architectures):
     """Main function to update Debian repository metadata"""
 
     try:
@@ -443,6 +443,8 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
             metadata_files.append(arch + "/Packages.gz")
     
     for dist in distributions:
+        if dists and dist not in dists:
+            continue
         logging.info(f"Processing distribution: {dist}")
         dist_url = urljoin(base_url, "dists/" + dist + "/")
         dist_dir = os.path.join(local_base_dir, "dists/" + dist)
@@ -488,6 +490,8 @@ def main():
     args = parser.parse_args()
     if not args.base_url.endswith("/"):
         args.base_url += "/"
+    if not args.dist:
+        args.dist = None
 
     logging.basicConfig(level=getattr(logging, args.log_level), format='%(asctime)s %(levelname)s %(message)s')
 
@@ -502,7 +506,7 @@ def main():
             return
 
     logging.info("Starting Debian metadata update...")
-    update_debian_metadata(args.base_url, args.local_dir, args.comp, args.arch)
+    update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
     logging.info("Metadata update completed!")
 
 if __name__ == "__main__":
