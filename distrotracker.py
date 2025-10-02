@@ -229,7 +229,7 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
     updated = True
     
     for metadata_dir in metadata_dirs:
-        url = urljoin(base_url, metadata_dir)
+        url = base_url + metadata_dir
         try:
             # Build local path from URL
             parsed_url = urlparse(url)
@@ -410,7 +410,7 @@ def update_debian_metadata(base_url, local_base_dir, components, architectures):
         pass
     
     logging.info("Fetching distributions list...")
-    distributions = get_distributions(urljoin(base_url, "dists/"))
+    distributions = get_distributions(base_url + "/dists/")
     
     if not distributions:
         logging.error("No distributions found!")
