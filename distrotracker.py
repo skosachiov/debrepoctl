@@ -466,7 +466,7 @@ def main():
     parser.add_argument("--arch", default=['binary-amd64', 'source'], nargs='+', \
         help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")        
     parser.add_argument("--force", action="store_true", help="Force update even if remote files are older")
-    parser.add_argument("--find", action="store_true", help="Read stdin and find a minimum version index packages that satisfies the conditions, format: libpython3.13 (>= 3.13.0~rc3)")
+    parser.add_argument("--find", action="store_true", help="Read stdin and find a minimum version index packages that satisfies the conditions, example: libpython3.13 (>= 3.13.0~rc3)")
     parser.add_argument("--log-level", default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
         help='set the logging level (default: %(default)s)')    
     
