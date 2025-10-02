@@ -320,7 +320,7 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
 def get_distributions(base_url):
     """Get list of distributions from the Debian repository"""
     try:
-        response = requests.get(base_url)
+        response = requests.get(urljoin(base_url, ""))
         response.raise_for_status()
         
         # Parse distributions from the directory listing
