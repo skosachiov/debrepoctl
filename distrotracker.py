@@ -210,7 +210,7 @@ def find_min_version(fin, filename, arch = None, briefly = None):
                 if arch and p['arch'] not in arch:
                     continue
                 if briefly:
-                    print({k: v for k, v in p.items() if k not in briefly_keys})
+                    print({k: v for k, v in p.items() if k in briefly_keys})
                 else:
                     print(p)
 
