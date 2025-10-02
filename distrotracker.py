@@ -174,7 +174,7 @@ def check_version(version, required_op, required_version):
     else:
         return False
 
-def find_min_version(fin, filename, arch = None, briefly = None):
+def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
 
     if not os.path.exists(filename):
         logging.error(f"File {filename} does not exist")
@@ -210,10 +210,14 @@ def find_min_version(fin, filename, arch = None, briefly = None):
         for p in data_dict[package_name]:
             if check_version(p['version'], operator, required_version):
                 if arch and p['arch'] not in arch:
+                    logging.warning(f"The package was skipped because it does not exist on the specified architectures {package_name}")
+                    continue
+                if dist and p['dist'] not in dist:
+                    logging.warning(f"The package was skipped because it is not available in the specified distributions {package_name}")
                     continue
                 item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
                 items.append(f'  {item_str}')
-                
+
     print("[")                
     print(',\n'.join(items))
     print("]")
@@ -471,6 +475,7 @@ def main():
     parser = argparse.ArgumentParser(description="Update Debian metadata files from the Debian repository")
     parser.add_argument("--base-url", default="https://ftp.debian.org/debian/", help="Base URL for Debian metadata (default: %(default)s)")
     parser.add_argument("--local-dir", default="./metadata", help="Local directory to store metadata files (default: %(default)s)")
+    parser.add_argument("--dist", default=[], nargs='+', help="Distributions (default: all)")    
     parser.add_argument("--comp", default=['main'], nargs='+', help="Components main, contrib, non-free, non-free-firmware etc. (default: main)")
     parser.add_argument("--arch", default=['binary-amd64', 'source'], nargs='+', \
         help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")
@@ -489,7 +494,7 @@ def main():
     apt_pkg.init()
 
     if args.find:
-        find_min_version(sys.stdin, args.local_dir + "/index.json", args.arch, args.briefly)
+        find_min_version(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly)
         return
     elif not update_debian_metadata_if_newer(args.base_url, args.local_dir) and not args.force:
         logging.info("Specific remote metadata files are older, no need to update")
