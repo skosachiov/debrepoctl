@@ -501,7 +501,7 @@ def main():
     
     args = parser.parse_args()
     if not args.base_url:
-        with open(local_base_dir + "/status", "r") as f:
+        with open(args.local_dir + "/status", "r") as f:
             args.base_url = json.load(f).base_url    
     if not args.base_url.endswith("/"):
         args.base_url += "/"
