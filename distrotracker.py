@@ -471,7 +471,8 @@ def main():
         help='set the logging level (default: %(default)s)')    
     
     args = parser.parse_args()
-    if not args.base_url.endswith("/") args.base_url += "/"
+    if not args.base_url.endswith("/"):
+        args.base_url += "/"
 
     logging.basicConfig(level=getattr(logging, args.log_level), format='%(asctime)s %(levelname)s %(message)s')
 
