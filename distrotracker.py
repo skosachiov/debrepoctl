@@ -512,7 +512,7 @@ def main():
             with open(local_base_dir + "/status", "r") as f:
                 args.base_url = json.load(f).base_url
         if update_debian_metadata_if_newer(args.base_url, args.local_dir) or args.force or \
-            not os.path.exists(os.path.join(args.local_dir, "status"))
+            not os.path.exists(os.path.join(args.local_dir, "status")):
                 logging.info("Starting metadata update...")
                 update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
                 logging.info("Metadata update completed!")
