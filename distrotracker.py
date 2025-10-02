@@ -207,16 +207,24 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
             logging.warning(f"Can not find package name {package_name}")
             continue
 
+        no_arch_package_names = []
+        no_dist_package_names = []
         for p in data_dict[package_name]:
+            flag_ok = True
             if check_version(p['version'], operator, required_version):
                 if arch and p['arch'] not in arch:
-                    logging.warning(f"The package was skipped because it does not exist on the specified architectures {package_name}")
-                    continue
+                    no_arch_package_names.append(package_name)
+                    flag_ok = False
                 if dist and p['dist'] not in dist:
-                    logging.warning(f"The package was skipped because it is not available in the specified distributions {package_name}")
-                    continue
-                item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
-                items.append(f'  {item_str}')
+                    no_dist_package_names.append(package_name)
+                    flag_ok = False
+                if flag_ok:
+                    item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
+                    items.append(f'  {item_str}')
+        if no_arch_package_names:
+            logging.warning(f"Package does not exist for the specified architectures {no_arch_package_names}")             
+        if no_dist_package_names:
+            logging.warning(f"Package is not available in the specified distributions {no_dist_package_names}")   
 
     print("[")                
     print(',\n'.join(items))
