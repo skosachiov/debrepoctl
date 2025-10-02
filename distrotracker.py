@@ -205,14 +205,17 @@ def find_min_version(fin, filename, arch = None, briefly = None):
         if package_name not in data_dict:
             logging.warning(f"Can not find package name {package_name}")
             continue
+
+        print("[")
+        items = []
         for p in data_dict[package_name]:
             if check_version(p['version'], operator, required_version):
                 if arch and p['arch'] not in arch:
                     continue
-                if briefly:
-                    print({k: v for k, v in p.items() if k in briefly_keys})
-                else:
-                    print(p)
+                item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
+                items.append(f'  {item_str}')
+        print(',\n'.join(items))
+        print("]")
 
 def update_debian_metadata_if_newer(base_url, local_base_dir):
     """
