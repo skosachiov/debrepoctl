@@ -26,7 +26,7 @@ def write_metadata_index(filename, data_dict):
                 items.append(f'  {item_str}')
             f.write(',\n'.join(items))
             f.write('\n]')  # End with list bracket
-        logging.info(f"List successfully written to {filename}")
+        logging.info(f"List successfully written to: {filename}")
     except IOError as e:
         logging.error(f"Error writing to file: {e}")
 
@@ -40,7 +40,7 @@ def read_metadata_index(filename):
             data_list = json.load(f)
         for e in data_list:
             data_dict[md5_from_tuple((e["package"], e['version'], e['dist'], e['comp'], e['arch']))] = e
-        logging.info(f"Dictionary successfully read from {filename}")
+        logging.info(f"Dictionary successfully read from: {filename}")
         return data_dict
     except (IOError, json.JSONDecodeError) as e:
         logging.error(f"Error reading file: {e}")
@@ -177,7 +177,7 @@ def check_version(version, required_op, required_version):
 def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
 
     if not os.path.exists(filename):
-        logging.error(f"File {filename} does not exist")
+        logging.error(f"File does not exist: {filename}")
         return {}
     data_dict = {}
     try:
@@ -191,7 +191,7 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
     except (IOError, json.JSONDecodeError) as e:
         logging.error(f"Error reading file: {e}")
         return {}
-    logging.info(f"Dictionary successfully read from {filename}")
+    logging.info(f"Dictionary successfully read from: {filename}")
     for key in data_dict:
         data_dict[key].sort(key=cmp_to_key(lambda a, b: apt_pkg.version_compare(a["version"], b["version"])))
 
@@ -206,7 +206,7 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
         package_name, operator, required_version = req
  
         if package_name not in data_dict:
-            logging.warning(f"Can not find package name {package_name}")
+            logging.warning(f"Can not find package name: {package_name}")
             continue
 
         for p in data_dict[package_name]:
@@ -222,9 +222,11 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
                     item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
                     items.append(f'  {item_str}')
     if no_arch_package_names:
-        logging.warning(f"Packages do not exist for the processed architectures {no_arch_package_names}")             
+        for p in no_arch_package_names:
+            logging.warning(f"Package does not exist for the processed architectures: {p}")
     if no_dist_package_names:
-        logging.warning(f"Packages are not available in the processed distributions {no_dist_package_names}")   
+        for p in no_dist_package_names:
+            logging.warning(f"Package is not available in the processed distributions: {p}")   
     print("[")                
     print(',\n'.join(items))
     print("]")
@@ -273,7 +275,7 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                     remote_time = datetime.strptime(remote_time_str, '%a, %d %b %Y %H:%M:%S %Z').timestamp()
                     
                     if remote_time > local_mtime:
-                        logging.info(f"Updating {url_path} (remote is newer)")
+                        logging.info(f"Updating (remote is newer): {url_path}")
                         # Download the updated file
                         file_response = requests.get(url)
                         file_response.raise_for_status()
@@ -293,15 +295,15 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                                         shutil.copyfileobj(f_in, f_out)
                                 # Set same modification time for extracted file
                                 os.utime(extract_path, (remote_time, remote_time))
-                                logging.info(f"Extracted to {extract_path}")
+                                logging.info(f"Extracted to: {extract_path}")
                             except Exception as e:
                                  logging.error(f"Error extracting {local_path}: {e}")
                         
                     else:
-                        logging.info(f"{url_path} is up to date")
+                        logging.info(f"Url is up to date: {url_path}")
                         updated = False
                 else:
-                    logging.warning(f"No last-modified header for {url}")
+                    logging.warning(f"No last-modified header for: {url}")
             else:
                 # File doesn't exist locally, download it
                 logging.info(f"Downloading new file: {url_path}")
@@ -327,12 +329,12 @@ def update_debian_metadata_if_newer(base_url, local_base_dir):
                         # Set same modification time for extracted file
                         if 'last-modified' in file_response.headers:
                             os.utime(extract_path, (remote_time, remote_time))
-                        logging.info(f"Extracted to {extract_path}")
+                        logging.info(f"Extracted to: {extract_path}")
                     except Exception as e:
                         logging.error(f"Error extracting {local_path}: {e}")
                 
         except requests.RequestException as e:
-            logging.error(f"Error processing {url}: {e}")
+            logging.warning(f"No processing {url}: {e}")
             continue
     
     return updated
