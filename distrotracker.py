@@ -222,9 +222,9 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
                     item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
                     items.append(f'  {item_str}')
     if no_arch_package_names:
-        logging.warning(f"Package does not exist for the specified architectures {no_arch_package_names}")             
+        logging.warning(f"Packages do not exist for the processed architectures {no_arch_package_names}")             
     if no_dist_package_names:
-        logging.warning(f"Package is not available in the specified distributions {no_dist_package_names}")   
+        logging.warning(f"Packages are not available in the processed distributions {no_dist_package_names}")   
     print("[")                
     print(',\n'.join(items))
     print("]")
