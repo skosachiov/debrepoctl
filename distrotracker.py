@@ -7,20 +7,12 @@ from datetime import datetime
 from functools import cmp_to_key
 
 
-def md5_from_tuple(data_tuple):
-    """Generate MD5 hash from a tuple using JSON serialization"""
-    # Convert tuple to JSON string
-    json_str = json.dumps(data_tuple)
-    # Generate MD5 hash
-    md5_hash = hashlib.md5(json_str.encode('utf-8'))
-    return md5_hash.hexdigest()
-
-def write_metadata_index(filename, data_dict):
+def write_metadata_index(filename, data_list):
     try:
         with open(filename, 'w', encoding='utf-8') as f:
             f.write('[\n')  # Start with list bracket
             items = []
-            for item in data_dict.values():
+            for item in data_list:
                 # Convert each item to JSON string without indentation
                 item_str = json.dumps(item, separators=(',', ':'))
                 items.append(f'  {item_str}')
@@ -30,24 +22,8 @@ def write_metadata_index(filename, data_dict):
     except IOError as e:
         logging.error(f"Error writing to file: {e}")
 
-def read_metadata_index(filename):
-    if not os.path.exists(filename):
-        logging.error(f"File {filename} does not exist")
-        return {}
-    data_dict = {}
-    try:
-        with open(filename, 'r', encoding='utf-8') as f:
-            data_list = json.load(f)
-        for e in data_list:
-            data_dict[md5_from_tuple((e["package"], e['version'], e['dist'], e['comp'], e['arch']))] = e
-        logging.info(f"Dictionary successfully read from: {filename}")
-        return data_dict
-    except (IOError, json.JSONDecodeError) as e:
-        logging.error(f"Error reading file: {e}")
-        return {}
-
-def update_metadata_index(filename, data_dict, dist, comp, arch):
-    packages = data_dict
+def update_metadata_index(filename, data_list, dist, comp, arch):
+    packages = data_list
     with open(filename, 'rt', encoding='utf-8') as f:
         content = f.read()
         # Split into individual package blocks
@@ -87,13 +63,12 @@ def update_metadata_index(filename, data_dict, dist, comp, arch):
                             depends.append(p)
             # Store package metadata if valid
             if pkg_name != None:
-                if md5_from_tuple((pkg_name, version, dist, comp, arch)) not in packages:
-                    if source == None: source = pkg_name
-                    if source_version == None: source_version = version
-                    packages[md5_from_tuple((pkg_name, version, dist, comp, arch))] = { \
-                        'package': pkg_name, 'version': version, 'dist': dist, 'comp': comp, 'arch': arch, \
-                        'depends': hashlib.md5(",".join(depends).encode()).hexdigest()[:8], \
-                        'source': source, 'source_version': source_version}
+                if source == None: source = pkg_name
+                if source_version == None: source_version = version
+                packages.append({ \
+                    'package': pkg_name, 'version': version, 'dist': dist, 'comp': comp, 'arch': arch, \
+                    'depends': hashlib.md5(",".join(depends).encode()).hexdigest()[:8], \
+                    'source': source, 'source_version': source_version})
     logging.debug(f'In the file {filename} processed packets: {len(packages)}')
     return packages
 
@@ -446,7 +421,7 @@ def update_metadata(base_url, local_base_dir, dists, components, architectures):
     logging.info(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
     
     # Files to download for each distribution
-    data_dict = {}
+    data_list = []
     metadata_files = []
     for arch in architectures:
         if arch == "source":
@@ -479,9 +454,9 @@ def update_metadata(base_url, local_base_dir, dists, components, architectures):
                 
                 # Update index dict
                 if download_status != None:
-                    update_metadata_index(output_path, data_dict, dist, component, metadata_file.split("/")[0])
+                    update_metadata_index(output_path, data_list, dist, component, metadata_file.split("/")[0])
     
-    write_metadata_index(local_base_dir + "/index.json", data_dict)
+    write_metadata_index(local_base_dir + "/index.json", data_list)
 
     with open(local_base_dir + "/status", "w") as f:
         json.dump({'base_url': base_url, 'timestamp': str(time.time())}, f) 
