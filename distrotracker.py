@@ -517,8 +517,6 @@ def main():
         args.base_url += "/"
     if not args.dist:
         args.dist = None
-    if args.source:
-        args.source = 'source'
 
     logging.basicConfig(level=getattr(logging, args.log_level), format='%(asctime)s %(levelname)s %(message)s')
 
@@ -531,7 +529,8 @@ def main():
             update_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
             logging.info("Metadata update completed!")
     if args.find:
-        find_versions(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly, args.latest, args.source)
+        find_versions(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly, args.latest, \
+            "package" if not args.source else "source")
 
 
 if __name__ == "__main__":
