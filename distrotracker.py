@@ -174,7 +174,7 @@ def check_version(version, required_op, required_version):
     else:
         return False
 
-def find_min_version(fin, filename, dist = None, arch = None, briefly = None, latest = None):
+def find_versions(fin, filename, dist = None, arch = None, briefly = None, latest = None):
 
     if not os.path.exists(filename):
         logging.error(f"File does not exist: {filename}")
@@ -234,7 +234,7 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None, la
     print(',\n'.join(items))
     print("]")
 
-def update_debian_metadata_if_newer(base_url, local_base_dir):
+def original_metadata_is_newer(base_url, local_base_dir):
     """
     Check if specific Debian metadata files are newer than local ones and update if needed.
     Builds local paths from URL structure.
@@ -426,7 +426,7 @@ def extract_gz_file(gz_path, output_path):
     except Exception as e:
         logging.error(f"Error extracting {gz_path}: {e}")
 
-def update_debian_metadata(base_url, local_base_dir, dists, components, architectures):
+def update_metadata(base_url, local_base_dir, dists, components, architectures):
     """Main function to update Debian repository metadata"""
 
     try:
@@ -522,13 +522,13 @@ def main():
     apt_pkg.init()
 
     if not args.hold:
-        if update_debian_metadata_if_newer(args.base_url, args.local_dir) or args.force or \
+        if original_metadata_is_newer(args.base_url, args.local_dir) or args.force or \
                 not os.path.exists(os.path.join(args.local_dir, "status")):
             logging.info("Starting metadata update...")
-            update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
+            update_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
             logging.info("Metadata update completed!")
     if args.find:
-        find_min_version(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly, args.latest)
+        find_versions(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly, args.latest)
 
 
 if __name__ == "__main__":
