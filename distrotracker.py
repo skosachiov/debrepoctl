@@ -195,7 +195,7 @@ def find_versions(fin, filename, dist = None, arch = None, briefly = None, lates
     for key in data_dict:
         data_dict[key].sort(key=cmp_to_key(lambda a, b: apt_pkg.version_compare(a["version"], b["version"])))
 
-    briefly_keys = [index_name, 'version', 'dist', 'arch']
+    briefly_keys = ['package', 'version', 'dist', 'arch', 'source']
     items = []
     no_arch_package_names = set()
     no_dist_package_names = set()
