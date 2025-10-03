@@ -174,7 +174,7 @@ def check_version(version, required_op, required_version):
     else:
         return False
 
-def find_versions(fin, filename, dist = None, arch = None, briefly = None, latest = None):
+def find_versions(fin, filename, dist = None, arch = None, briefly = None, latest = None, index_name = 'package'):
 
     if not os.path.exists(filename):
         logging.error(f"File does not exist: {filename}")
@@ -184,10 +184,10 @@ def find_versions(fin, filename, dist = None, arch = None, briefly = None, lates
         with open(filename, 'r', encoding='utf-8') as f:
             data_list = json.load(f)
         for e in data_list:
-            if e["package"] not in data_dict:
-                data_dict[e["package"]] = [e]
+            if e[index_name] not in data_dict:
+                data_dict[e[index_name]] = [e]
             else:
-                data_dict[e["package"]].append(e)
+                data_dict[e[index_name]].append(e)
     except (IOError, json.JSONDecodeError) as e:
         logging.error(f"Error reading file: {e}")
         return {}
@@ -195,7 +195,7 @@ def find_versions(fin, filename, dist = None, arch = None, briefly = None, lates
     for key in data_dict:
         data_dict[key].sort(key=cmp_to_key(lambda a, b: apt_pkg.version_compare(a["version"], b["version"])))
 
-    briefly_keys = ['package', 'version', 'dist', 'arch']
+    briefly_keys = [index_name, 'version', 'dist', 'arch']
     items = []
     no_arch_package_names = set()
     no_dist_package_names = set()
@@ -221,9 +221,9 @@ def find_versions(fin, filename, dist = None, arch = None, briefly = None, lates
                     flag_ok = False
                 if flag_ok:
                     item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
-                    if latest and package_prev == p['package']: items.pop()
+                    if latest and package_prev == p[index_name]: items.pop()
                     items.append(f'  {item_str}')
-                    package_prev = p['package']
+                    package_prev = p[index_name]
     if no_arch_package_names:
         for p in no_arch_package_names:
             logging.warning(f"Package does not exist for the processed architectures: {p}")
@@ -499,6 +499,7 @@ def main():
     parser.add_argument("--find", action="store_true", \
         help="Read stdin and find a minimum version index packages that satisfies the conditions, \
         example: libpython3.13 (>= 3.13.0~rc3)")
+    parser.add_argument("--source", action="store_true", help="Use the Source field for searching, not the Package field")
     parser.add_argument("--briefly", action="store_true", help="Display only basic fields")
     parser.add_argument("--log-level", default='INFO', choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'], \
         help='Set the logging level (default: %(default)s)')    
@@ -516,6 +517,8 @@ def main():
         args.base_url += "/"
     if not args.dist:
         args.dist = None
+    if args.source:
+        args.source = 'source'
 
     logging.basicConfig(level=getattr(logging, args.log_level), format='%(asctime)s %(levelname)s %(message)s')
 
@@ -528,7 +531,7 @@ def main():
             update_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
             logging.info("Metadata update completed!")
     if args.find:
-        find_versions(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly, args.latest)
+        find_versions(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly, args.latest, args.source)
 
 
 if __name__ == "__main__":
