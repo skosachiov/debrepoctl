@@ -174,7 +174,9 @@ def check_version(version, required_op, required_version):
     else:
         return False
 
-def find_versions(fin, filename, dist = None, arch = None, briefly = None, latest = None, index_name = 'package'):
+def find_versions(fin, filename, dist = None, arch = None, briefly = None, latest = None, index_key = 'package'):
+
+    version_key = "source_version" if index_key = "source" else "version"
 
     if not os.path.exists(filename):
         logging.error(f"File does not exist: {filename}")
@@ -184,16 +186,16 @@ def find_versions(fin, filename, dist = None, arch = None, briefly = None, lates
         with open(filename, 'r', encoding='utf-8') as f:
             data_list = json.load(f)
         for e in data_list:
-            if e[index_name] not in data_dict:
-                data_dict[e[index_name]] = [e]
+            if e[index_key] not in data_dict:
+                data_dict[e[index_key]] = [e]
             else:
-                data_dict[e[index_name]].append(e)
+                data_dict[e[index_key]].append(e)
     except (IOError, json.JSONDecodeError) as e:
         logging.error(f"Error reading file: {e}")
         return {}
     logging.info(f"Dictionary successfully read from: {filename}")
     for key in data_dict:
-        data_dict[key].sort(key=cmp_to_key(lambda a, b: apt_pkg.version_compare(a["version"], b["version"])))
+        data_dict[key].sort(key=cmp_to_key(lambda a, b: apt_pkg.version_compare(a[version_key], b[version_key])))
 
     briefly_keys = ['package', 'version', 'dist', 'arch', 'source']
     items = []
@@ -221,9 +223,9 @@ def find_versions(fin, filename, dist = None, arch = None, briefly = None, lates
                     flag_ok = False
                 if flag_ok:
                     item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
-                    if latest and package_prev == p[index_name]: items.pop()
+                    if latest and package_prev == p[index_key]: items.pop()
                     items.append(f'  {item_str}')
-                    package_prev = p[index_name]
+                    package_prev = p[index_key]
     if no_arch_package_names:
         for p in no_arch_package_names:
             logging.warning(f"Package does not exist for the processed architectures: {p}")
