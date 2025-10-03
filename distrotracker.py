@@ -466,13 +466,13 @@ def update_metadata(base_url, local_base_dir, dists, components, architectures):
                 # Download .gz file
                 remote_url = urljoin(dist_url, file_path)
                 local_gz_path = os.path.join(dist_dir, file_path)
-                
+
+                output_filename = os.path.basename(file_path).replace('.gz', '')
+                output_dir = os.path.dirname(local_gz_path)
+                output_path = os.path.join(output_dir, output_filename)
+
                 if download_file(remote_url, local_gz_path):
                     # Extract the .gz file
-                    output_filename = os.path.basename(file_path).replace('.gz', '')
-                    output_dir = os.path.dirname(local_gz_path)
-                    output_path = os.path.join(output_dir, output_filename)
-                    
                     extract_gz_file(local_gz_path, output_path)
                 
                 # Update index dict
