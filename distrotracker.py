@@ -176,7 +176,7 @@ def check_version(version, required_op, required_version):
 
 def find_versions(fin, filename, dist = None, arch = None, briefly = None, latest = None, index_key = 'package'):
 
-    version_key = "source_version" if index_key = "source" else "version"
+    version_key = "source_version" if index_key == "source" else "version"
 
     if not os.path.exists(filename):
         logging.error(f"File does not exist: {filename}")
