@@ -445,9 +445,6 @@ def update_metadata(base_url, local_base_dir, dists, components, architectures):
 
     logging.info(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
     
-    logging.info("Reading existing index...")
-    data_dict = read_metadata_index(local_base_dir + "/index.json")
-
     # Files to download for each distribution
     metadata_files = []
     for arch in architectures:
@@ -477,8 +474,9 @@ def update_metadata(base_url, local_base_dir, dists, components, architectures):
                     output_path = os.path.join(output_dir, output_filename)
                     
                     extract_gz_file(local_gz_path, output_path)
-                    # Update index dict
-                    update_metadata_index(output_path, data_dict, dist, component, metadata_file.split("/")[0])
+                
+                # Update index dict
+                update_metadata_index(output_path, data_dict, dist, component, metadata_file.split("/")[0])
     
     write_metadata_index(local_base_dir + "/index.json", data_dict)
 
