@@ -209,7 +209,8 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None, la
             logging.warning(f"Can not find package name: {package_name}")
             continue
 
-        for p in data_dict[package_name][-1:] if latest else data_dict[package_name]:
+        package_prev = ""
+        for p in data_dict[package_name]:
             flag_ok = True
             if check_version(p['version'], operator, required_version):
                 if arch and p['arch'] not in arch:
@@ -220,7 +221,9 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None, la
                     flag_ok = False
                 if flag_ok:
                     item_str = json.dumps({k: v for k, v in p.items() if k in briefly_keys} if briefly else p)
+                    if latest and package_prev == p['package']: items.pop()
                     items.append(f'  {item_str}')
+                    package_prev = p['package']
     if no_arch_package_names:
         for p in no_arch_package_names:
             logging.warning(f"Package does not exist for the processed architectures: {p}")
