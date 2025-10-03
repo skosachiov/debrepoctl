@@ -416,7 +416,7 @@ def download_file(url, local_path):
             
     except requests.RequestException as e:
         logging.error(f"Error downloading {url}: {e}")
-        return False
+        return None
 
 def extract_gz_file(gz_path, output_path):
     """Extract .gz file to output path"""
@@ -472,12 +472,14 @@ def update_metadata(base_url, local_base_dir, dists, components, architectures):
                 output_dir = os.path.dirname(local_gz_path)
                 output_path = os.path.join(output_dir, output_filename)
 
-                if download_file(remote_url, local_gz_path):
+                download_status = download_file(remote_url, local_gz_path)
+                if download_status:
                     # Extract the .gz file
                     extract_gz_file(local_gz_path, output_path)
                 
                 # Update index dict
-                update_metadata_index(output_path, data_dict, dist, component, metadata_file.split("/")[0])
+                if download_status != None:
+                    update_metadata_index(output_path, data_dict, dist, component, metadata_file.split("/")[0])
     
     write_metadata_index(local_base_dir + "/index.json", data_dict)
 
