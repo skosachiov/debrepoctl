@@ -446,6 +446,7 @@ def update_metadata(base_url, local_base_dir, dists, components, architectures):
     logging.info(f"Found {len(distributions)} distributions: {', '.join(distributions)}")
     
     # Files to download for each distribution
+    data_dict = {}
     metadata_files = []
     for arch in architectures:
         if arch == "source":
