@@ -174,7 +174,7 @@ def check_version(version, required_op, required_version):
     else:
         return False
 
-def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
+def find_min_version(fin, filename, dist = None, arch = None, briefly = None, latest = None):
 
     if not os.path.exists(filename):
         logging.error(f"File does not exist: {filename}")
@@ -209,7 +209,7 @@ def find_min_version(fin, filename, dist = None, arch = None, briefly = None):
             logging.warning(f"Can not find package name: {package_name}")
             continue
 
-        for p in data_dict[package_name]:
+        for p in data_dict[package_name][-1:] if latest else data_dict[package_name]:
             flag_ok = True
             if check_version(p['version'], operator, required_version):
                 if arch and p['arch'] not in arch:
@@ -490,6 +490,7 @@ def main():
     parser.add_argument("--comp", default=['main'], nargs='+', help="Components main, contrib, non-free, non-free-firmware etc. (default: main)")
     parser.add_argument("--arch", default=['binary-amd64', 'source'], nargs='+', \
         help="Architectures binary-amd64, binary-arm64, source etc. (default: binary-amd64 source)")
+    parser.add_argument("--latest", action="store_true", help="Show only one maximum version of a package")
     parser.add_argument("--force", action="store_true", help="Force update even if remote files are older")
     parser.add_argument("--hold", action="store_true", help="Do not attempt to update metadata")
     parser.add_argument("--find", action="store_true", \
@@ -524,7 +525,7 @@ def main():
             update_debian_metadata(args.base_url, args.local_dir, args.dist, args.comp, args.arch)
             logging.info("Metadata update completed!")
     if args.find:
-        find_min_version(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly)
+        find_min_version(sys.stdin, args.local_dir + "/index.json", args.dist, args.arch, args.briefly, args.latest)
 
 
 if __name__ == "__main__":
